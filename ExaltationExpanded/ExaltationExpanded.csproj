@@ -340,7 +340,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include=".gitignore" />
-    <None Include="Resources\.gitignore" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\*" />
