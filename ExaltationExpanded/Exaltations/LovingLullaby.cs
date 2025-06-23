@@ -59,13 +59,14 @@ namespace ExaltationExpanded.Exaltations
         /// <returns></returns>
         private int BuffMelody(int damage)
         {
-            if (damage > 0)
+            if (damage > 0 &&
+                IsEquipped())
             {
                 GameObject carefreeShield = HeroController.instance.carefreeShield;
                 if (carefreeShield != null)
                 {
                     int random = UnityEngine.Random.Range(1, 101);
-                    //SharedData.Log($"CM detected. Dice rolled: {random} out of 100");
+                    SharedData.Log($"CM detected. Dice rolled: {random} out of 100");
                     if (random <= 10)
                     {
                         //SharedData.Log("LL triggered. Damage negated");
@@ -76,6 +77,22 @@ namespace ExaltationExpanded.Exaltations
             }
 
             return damage;
+        }
+
+        /// <summary>
+        /// Checks if Loving Lullaby is equipped
+        /// </summary>
+        /// <returns></returns>
+        private bool IsEquipped()
+        {
+            if (GetMelodyId().Equals("40"))
+            {
+                return PlayerData.instance.equippedCharm_40;
+            }
+            else
+            {
+                return PlayerData.instance.GetBool($"equippedCharm_{SharedData.carefreeGrimmId}");
+            }
         }
     }
 }
