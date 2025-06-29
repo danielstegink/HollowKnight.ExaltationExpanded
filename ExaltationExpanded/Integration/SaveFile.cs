@@ -14,8 +14,7 @@ namespace ExaltationExpanded.Integration
         public static string GetModdedSaveFile(int index)
         {
             // Get save folder
-            string localFolder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string saveFolder = @$"{localFolder}\..\LocalLow\Team Cherry\Hollow Knight";
+            string saveFolder = UnityEngine.Application.persistentDataPath;
 
             // Build file name using save index
             string fileName = $"user{index}.modded.json";

@@ -17,7 +17,7 @@ namespace ExaltationExpanded
 {
     public class ExaltationExpanded : Mod, IGlobalSettings<GlobalSettings>, IMenuMod, ILocalSettings<LocalSaveSettings>
     {
-        public override string GetVersion() => "1.0.1.0";
+        public override string GetVersion() => "1.0.2.0";
 
         public override int LoadPriority() => 2;
 

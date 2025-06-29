@@ -66,7 +66,7 @@ namespace ExaltationExpanded.Exaltations
                     bonusDamage += 1;
                 }
 
-                PlayerData.instance.TakeMP(soulUsed);
+                HeroController.instance.TakeMP(soulUsed);
                 hitInstance.DamageDealt += bonusDamage;
                 //SharedData.Log($"Nail damage increased by {bonusDamage} in exchange for {soulUsed} SOUL");
             }

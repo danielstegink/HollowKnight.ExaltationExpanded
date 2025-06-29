@@ -339,7 +339,6 @@
     <None Include="..\ReadMe.md" Link="ReadMe.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\*" />

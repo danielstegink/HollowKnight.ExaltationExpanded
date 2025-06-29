@@ -66,7 +66,7 @@ namespace ExaltationExpanded.Exaltations
                 if (carefreeShield != null)
                 {
                     int random = UnityEngine.Random.Range(1, 101);
-                    SharedData.Log($"CM detected. Dice rolled: {random} out of 100");
+                    //SharedData.Log($"CM detected. Dice rolled: {random} out of 100");
                     if (random <= 10)
                     {
                         //SharedData.Log("LL triggered. Damage negated");

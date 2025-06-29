@@ -109,7 +109,8 @@ namespace ExaltationExpanded
         {
             "Slash",
             "AltSlash",
-            "UpSlash"
+            "UpSlash",
+            "DownSlash",
         };
 
         /// <summary>
