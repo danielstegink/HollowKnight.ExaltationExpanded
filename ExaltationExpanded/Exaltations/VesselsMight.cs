@@ -37,8 +37,7 @@ namespace ExaltationExpanded.Exaltations
         }
 
         /// <summary>
-        /// Vengeful Spirit does 15 damage for 33 SOUL, while Shade Soul does 30 damage
-        /// Vessel's Might will deal 1 damage for every 2 SOUL spent, maximum 4 damage at 8 soul per attack
+        /// Vessel's Might uses SOUL to increase damage dealt by nail attacks
         /// </summary>
         /// <param name="orig"></param>
         /// <param name="self"></param>
@@ -53,25 +52,51 @@ namespace ExaltationExpanded.Exaltations
             if (PlayerData.instance.equippedCharm_25 &&
                 isNailAttack)
             {
-                // Get how much SOUL we have to work with
-                int maxSoul = Math.Min(8, PlayerData.instance.MPCharge);
-
-                // Calculate how much SOUL we use, and how much damage it deals
-                int bonusDamage = 0;
-                int soulUsed = 0;
-                while (maxSoul >= 2)
-                {
-                    maxSoul -= 2;
-                    soulUsed += 2;
-                    bonusDamage += 1;
-                }
+                // Calculate how much SOUL to spend and how much damage its worth
+                int soulUsed = GetSoul();
+                float damagePerSoul = GetDamagePerSoul();
+                int damage = (int)Math.Floor(soulUsed * damagePerSoul);
 
                 HeroController.instance.TakeMP(soulUsed);
-                hitInstance.DamageDealt += bonusDamage;
-                //SharedData.Log($"Nail damage increased by {bonusDamage} in exchange for {soulUsed} SOUL");
+                hitInstance.DamageDealt += damage;
+                //SharedData.Log($"Nail damage increased by {damage} in exchange for {soulUsed} SOUL");
             }
 
             orig(self, hitInstance);
+        }
+
+
+        /// <summary>
+        /// Get how much SOUL to spend on the attack
+        /// </summary>
+        /// <returns></returns>
+        private int GetSoul()
+        {
+            // Vessel's Might essentially adds a Spell cast to our attack
+            // For 3 notches, Shaman Stone and Quick Slash both increase DPS
+            //      by 40%, so for 1 notch we should aim for a 13% increase
+            //      in DPS, cast 13% of a Spell
+            float baseSoul = 33f;
+            int maxSoul = (int)Math.Floor(baseSoul * 0.4f / 3f);
+
+            // Remember to not use more SOUL than we have
+            return Math.Min(maxSoul, PlayerData.instance.MPCharge);
+        }
+
+        /// <summary>
+        /// Get how much damage to deal per SOUL used
+        /// </summary>
+        /// <returns></returns>
+        private float GetDamagePerSoul()
+        {
+            // The most similar spell to nail attacks is arguably 
+            //      Dive because its I-Frames make it easy to use
+            // D-Dive has 3 parts that ultimately deal about 60
+            //      damage to whoever we land on, so we'll use that
+            //      as our point of reference.
+            float baseDamage = 60;
+            float soulSpent = 33;
+            return baseDamage / soulSpent;
         }
     }
 }

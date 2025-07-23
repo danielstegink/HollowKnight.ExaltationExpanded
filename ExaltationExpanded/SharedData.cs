@@ -60,6 +60,8 @@ namespace ExaltationExpanded
         public static CostPatch costPatch { get; set; } = new CostPatch();
 
         public static BalancePatch balancePatch { get; set; } = new BalancePatch();
+
+        public static VoidSoul voidSoul { get; set; } = new VoidSoul();
         #endregion
 
         /// <summary>

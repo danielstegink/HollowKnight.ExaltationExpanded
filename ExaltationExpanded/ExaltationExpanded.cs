@@ -15,9 +15,9 @@ using UnityEngine.UI;
 
 namespace ExaltationExpanded
 {
-    public class ExaltationExpanded : Mod, IGlobalSettings<GlobalSettings>, IMenuMod, ILocalSettings<LocalSaveSettings>
+    public class ExaltationExpanded : Mod, IGlobalSettings<GlobalSettings>, ICustomMenuMod, ILocalSettings<LocalSaveSettings>
     {
-        public override string GetVersion() => "1.0.2.0";
+        public override string GetVersion() => "1.1.0.0";
 
         public override int LoadPriority() => 2;
 
@@ -99,6 +99,7 @@ namespace ExaltationExpanded
             SharedData.nailsageGlory.ApplyHooks();
             SharedData.costPatch.ApplyHooks();
             SharedData.balancePatch.ApplyHooks();
+            SharedData.voidSoul.ApplyHooks();
 
             SharedData.Log("Initialized");
         }
@@ -337,9 +338,9 @@ namespace ExaltationExpanded
         #region Menu Options
         public bool ToggleButtonInsideMenu => false;
 
-        public List<IMenuMod.MenuEntry> GetMenuData(IMenuMod.MenuEntry? toggleButtonEntry)
+        public MenuScreen GetMenuScreen(MenuScreen modListMenu, ModToggleDelegates? modToggleDelegates)
         {
-            return ModMenu.CreateMenu();
+            return ModMenu.CreateMenuScreen(modListMenu);
         }
         #endregion
     }

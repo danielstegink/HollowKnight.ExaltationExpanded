@@ -17,8 +17,6 @@ namespace ExaltationExpanded.Patches
             ModHooks.SavegameSaveHook += SaveGameHooks;
 
             ModHooks.HeroUpdateHook += SteelTempestPatch;
-
-            // todo - unclear if i want to do anything with lordsoul/voidheart
         }
 
         private void CharmUpdateHooks(PlayerData data, HeroController controller)

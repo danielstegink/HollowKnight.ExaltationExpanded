@@ -13,5 +13,10 @@ namespace ExaltationExpanded.Settings
         /// Stores if the second Nailsage's Glory charm is equipped
         /// </summary>
         public bool nsgEquipped = false;
+
+        /// <summary>
+        /// Stores if Lordsoul has been equipped through Void Soul
+        /// </summary>
+        public bool voidSoulEquipped = false;
     }
 }

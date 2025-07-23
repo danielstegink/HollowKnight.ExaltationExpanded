@@ -1,4 +1,4 @@
-﻿using Modding;
+﻿using Satchel.BetterMenus;
 using System;
 using System.Collections.Generic;
 
@@ -6,47 +6,101 @@ namespace ExaltationExpanded
 {
     public static class ModMenu
     {
-        public static List<IMenuMod.MenuEntry> CreateMenu()
+        private static Menu menu;
+        private static MenuScreen menuScreen;
+
+        public static Dictionary<string, MenuScreen> subMenus;
+        private static List<string> subMenuNames = new List<string>()
         {
-            SharedData.Log("Building menu");
+            "Exaltation Balance",
+            "Swappable Charms",
+            "Mod Integrations"
+        };
 
-            List<IMenuMod.MenuEntry> menuOptions = new List<IMenuMod.MenuEntry>()
+        /// <summary>
+        /// Builds the Exaltation Expanded menu
+        /// </summary>
+        /// <param name="modListMenu"></param>
+        /// <returns></returns>
+        public static MenuScreen CreateMenuScreen(MenuScreen modListMenu)
+        {
+            // Declare the menu
+            menu = new Menu("Exaltation Expanded Options", new Element[] { });
+
+            // Populate main menu
+            BuildMenu();
+
+            // Insert the menu into the overall menu
+            menuScreen = menu.GetMenuScreen(modListMenu);
+
+            // Populate the sub-menus
+            BuildSubMenus();
+
+            return menuScreen;
+        }
+
+        /// <summary>
+        /// Builds the main menu by initializing the sub-menus
+        /// </summary>
+        private static void BuildMenu()
+        {
+            foreach (string subMenuName in subMenuNames)
             {
-                new IMenuMod.MenuEntry()
-                {
-                    Name = "Integrate Pale Court",
-                    Description = "Add exalted version King's Honour",
-                    Values = MenuValues(),
-                    Saver = value => SharedData.globalSettings.allowPaleCourt = Convert.ToBoolean(value),
-                    Loader = () => Convert.ToInt32(SharedData.globalSettings.allowPaleCourt)
-                },
-                new IMenuMod.MenuEntry()
-                {
-                    Name = "Nailsage's Glory",
-                    Description = "Possible to unlock both Nailsage charms",
-                    Values = MenuValues(),
-                    Saver = value => SharedData.globalSettings.allowNailsageGlory = Convert.ToBoolean(value),
-                    Loader = () => Convert.ToInt32(SharedData.globalSettings.allowNailsageGlory)
-                },
-                new IMenuMod.MenuEntry()
-                {
-                    Name = "Balance",
-                    Description = "Power balance for original Exaltation mod",
-                    Values = MenuValues(),
-                    Saver = value => SharedData.globalSettings.allowBalancePatch = Convert.ToBoolean(value),
-                    Loader = () => Convert.ToInt32(SharedData.globalSettings.allowBalancePatch)
-                },
-                new IMenuMod.MenuEntry()
-                {
-                    Name = "Cost",
-                    Description = "Charm cost fix for original Exaltation mod",
-                    Values = MenuValues(),
-                    Saver = value => SharedData.globalSettings.allowCostPatch = Convert.ToBoolean(value),
-                    Loader = () => Convert.ToInt32(SharedData.globalSettings.allowCostPatch)
-                },
-            };
+                menu.AddElement(Blueprints.NavigateToMenu(subMenuName,
+                                "",
+                                () => subMenus[subMenuName]));
+            }
+        }
 
-            return menuOptions;
+        /// <summary>
+        /// Populates the sub-menus
+        /// </summary>
+        private static void BuildSubMenus()
+        {
+            subMenus = new Dictionary<string, MenuScreen>();
+            
+            // Balance patches for Exaltation
+            Menu balanceMenu = new Menu(subMenuNames[0], new Element[]
+            {
+                new HorizontalOption("Balance",
+                                        "Power balance for Exaltation",
+                                        MenuValues(),
+                                        value => SharedData.globalSettings.allowBalancePatch = Convert.ToBoolean(value),
+                                        () => Convert.ToInt32(SharedData.globalSettings.allowBalancePatch)),
+                new HorizontalOption("Cost",
+                                        "Charm cost fix for Exaltation",
+                                        MenuValues(),
+                                        value => SharedData.globalSettings.allowCostPatch = Convert.ToBoolean(value),
+                                        () => Convert.ToInt32(SharedData.globalSettings.allowCostPatch)),
+            });
+            subMenus.Add(subMenuNames[0], balanceMenu.GetMenuScreen(menuScreen));
+
+            // Swappable Charm patches for Exaltation
+            Menu swapMenu = new Menu(subMenuNames[1], new Element[]
+            {
+                new HorizontalOption("Nailsage's Glory",
+                                        "Possible to unlock both Nailsage charms",
+                                        MenuValues(),
+                                        value => SharedData.globalSettings.allowNailsageGlory = Convert.ToBoolean(value),
+                                        () => Convert.ToInt32(SharedData.globalSettings.allowNailsageGlory)),
+                new HorizontalOption("Void Soul",
+                                        "Possible to unlock Lordsoul and Void Heart",
+                                        MenuValues(),
+                                        value => SharedData.globalSettings.allowVoidSoul = Convert.ToBoolean(value),
+                                        () => Convert.ToInt32(SharedData.globalSettings.allowVoidSoul)),
+            });
+            subMenus.Add(subMenuNames[1], swapMenu.GetMenuScreen(menuScreen));
+
+            // Mod integrations
+            Menu otherModsMenu = new Menu(subMenuNames[2], new Element[]
+            {
+                new HorizontalOption("Pale Court",
+                                        "Add exalted version of King's Honour",
+                                        MenuValues(),
+                                        value => SharedData.globalSettings.allowPaleCourt = Convert.ToBoolean(value),
+                                        () => Convert.ToInt32(SharedData.globalSettings.allowPaleCourt)),
+            });
+            subMenus.Add(subMenuNames[2], otherModsMenu.GetMenuScreen(menuScreen));
         }
 
         private static string[] MenuValues()

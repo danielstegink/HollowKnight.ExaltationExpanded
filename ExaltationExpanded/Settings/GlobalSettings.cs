@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ExaltationExpanded.Settings
+﻿namespace ExaltationExpanded.Settings
 {
     public class GlobalSettings
     {
@@ -15,5 +9,7 @@ namespace ExaltationExpanded.Settings
         public bool allowBalancePatch = true;
 
         public bool allowCostPatch = true;
+
+        public bool allowVoidSoul = true;
     }
 }

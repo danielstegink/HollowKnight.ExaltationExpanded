@@ -1,4 +1,10 @@
 # Patch Notes
+1.1.0.0
+-	Fixed Flukeswarm
+-	Modified Vessel's Might to be more balanced
+-	Added a new patch: Void Soul, which makes it possible to have Void Heart and Lordsoul at the same time
+-	Reworked menu to have a nested structure
+
 1.0.2.0
 -	Reduced logging
 -	General cleanup
