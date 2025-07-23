@@ -13,10 +13,14 @@ namespace ExaltationExpanded
     {
         private static ExaltationExpanded _logger = new ExaltationExpanded();
 
+        #region External Mods
         /// <summary>
         /// Parent mod Exaltation
         /// </summary>
         public static Exaltation.Exaltation exaltationMod { get; set; }
+
+        public static FiveKnights.FiveKnights paleCourtMod { get; set; }
+        #endregion
 
         #region Settings
         public static GlobalSettings globalSettings { get; set; } = new GlobalSettings();

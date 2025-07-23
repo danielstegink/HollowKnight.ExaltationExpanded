@@ -1,7 +1,6 @@
 ﻿using Exaltation;
 using ExaltationExpanded.Exaltations;
 using ExaltationExpanded.Helpers;
-using ExaltationExpanded.Integration;
 using ExaltationExpanded.Settings;
 using Modding;
 using SFCore.Generics;
@@ -67,6 +66,12 @@ namespace ExaltationExpanded
             if (SharedData.exaltationMod == null)
             {
                 throw new MissingReferenceException("Exaltation not installed.");
+            }
+
+            // Check if Pale Court is installed
+            if (ModHooks.GetMod("Pale Court") != null)
+            {
+                SharedData.paleCourtMod = (FiveKnights.FiveKnights)ModHooks.GetMod("Pale Court");
             }
 
             // Check if a mod is installed that added Grimmchild or
@@ -183,8 +188,14 @@ namespace ExaltationExpanded
         /// </summary>
         private void CheckPaleCourt()
         {
-            bool defeatedIsma = SharedData.globalSettings.allowPaleCourt && 
-                                PaleCourt.DefeatedIsma(currentSave);
+            // If Pale Court isn't installed, don't bother
+            if (SharedData.paleCourtMod == null)
+            {
+                return;
+            }
+
+            bool defeatedIsma = SharedData.globalSettings.allowPaleCourt &&
+                                SharedData.paleCourtMod.SaveSettings.CompletionIsma.isUnlocked;
             //SharedData.Log($"Defeated Isma: {defeatedIsma}");
             Exaltations.Exaltation dungDefender = SharedData.exaltations["10"];
 

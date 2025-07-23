@@ -94,6 +94,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>$(HollowKnightRefs)/Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PaleCourt">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\Hollow Knight\hollow_knight_Data\Managed\Mods\Pale Court\PaleCourt.dll</HintPath>
+    </Reference>
     <Reference Include="PlayMaker">
       <HintPath>$(HollowKnightRefs)/PlayMaker.dll</HintPath>
     </Reference>
