@@ -12,7 +12,12 @@ Thank you to Xhuis, Théodore and everyone else who made Exaltation; it is an in
 
 Huge shout out to the Hollow Knight modding community as a whole. This was an especially intensive project and I was lost on multiple occasions without their help.
 
+Thank you to Volt for help with bug detection and maintenance.
+
 ## Patch Notes
+1.1.1.0
+-	Fixed integration bug where Pale Court was a required mod
+
 1.1.0.0
 -	Fixed Flukeswarm
 -	Modified Vessel's Might to be more balanced

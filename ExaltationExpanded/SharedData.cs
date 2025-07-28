@@ -18,8 +18,6 @@ namespace ExaltationExpanded
         /// Parent mod Exaltation
         /// </summary>
         public static Exaltation.Exaltation exaltationMod { get; set; }
-
-        public static FiveKnights.FiveKnights paleCourtMod { get; set; }
         #endregion
 
         #region Settings
@@ -79,7 +77,7 @@ namespace ExaltationExpanded
 
         #region Getting private fields, methods, etc
         /// <summary>
-        /// Gets a non-static field (even a private one) from the given input class
+        /// Gets a non-static field from the given input class
         /// </summary>
         /// <typeparam name="I"></typeparam>
         /// <typeparam name="O"></typeparam>
@@ -89,12 +87,12 @@ namespace ExaltationExpanded
         public static O GetField<I, O>(I input, string fieldName)
         {
             FieldInfo fieldInfo = input.GetType()
-                                       .GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+                                       .GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             return (O)fieldInfo.GetValue(input);
         }
 
         /// <summary>
-        /// Sets the value of non-static field (even a private one) in a given class
+        /// Sets the value of non-static field in a given class
         /// </summary>
         /// <typeparam name="I"></typeparam>
         /// <param name="input"></param>
@@ -103,8 +101,23 @@ namespace ExaltationExpanded
         public static void SetField<I>(I input, string fieldName, object value)
         {
             FieldInfo fieldInfo = input.GetType()
-                                       .GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
+                                       .GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             fieldInfo.SetValue(input, value);
+        }
+
+        /// <summary>
+        /// Gets a non-static property from the given input class
+        /// </summary>
+        /// <typeparam name="I"></typeparam>
+        /// <typeparam name="O"></typeparam>
+        /// <param name="input"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public static O GetProperty<I, O>(I input, string fieldName)
+        {
+            PropertyInfo propertyInfo = input.GetType()
+                                       .GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            return (O)propertyInfo.GetValue(input);
         }
         #endregion
 

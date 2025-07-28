@@ -14,29 +14,29 @@ using UnityEngine.UI;
 
 namespace ExaltationExpanded
 {
-    public class ExaltationExpanded : Mod, IGlobalSettings<GlobalSettings>, ICustomMenuMod, ILocalSettings<LocalSaveSettings>
+    public class ExaltationExpanded : FullSettingsMod<LocalSaveSettings, GlobalSettings>, ICustomMenuMod
     {
-        public override string GetVersion() => "1.1.0.0";
+        public override string GetVersion() => "1.1.1.0";
 
         public override int LoadPriority() => 2;
 
         #region Save Settings
-        public void OnLoadGlobal(GlobalSettings s)
+        public new void OnLoadGlobal(GlobalSettings s)
         {
             SharedData.globalSettings = s;
         }
 
-        public GlobalSettings OnSaveGlobal()
+        public new GlobalSettings OnSaveGlobal()
         {
             return SharedData.globalSettings;
         }
 
-        public void OnLoadLocal(LocalSaveSettings s)
+        public new void OnLoadLocal(LocalSaveSettings s)
         {
             SharedData.saveSettings = s;
         }
 
-        public LocalSaveSettings OnSaveLocal()
+        public new LocalSaveSettings OnSaveLocal()
         {
             return SharedData.saveSettings;
         }
@@ -57,6 +57,11 @@ namespace ExaltationExpanded
         /// </summary>
         private GameObject canvas;
 
+        /// <summary>
+        /// Stores the Pale Court Mod if its installed
+        /// </summary>
+        private IMod paleCourtMod;
+
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
             SharedData.Log("Initializing");
@@ -69,10 +74,7 @@ namespace ExaltationExpanded
             }
 
             // Check if Pale Court is installed
-            if (ModHooks.GetMod("Pale Court") != null)
-            {
-                SharedData.paleCourtMod = (FiveKnights.FiveKnights)ModHooks.GetMod("Pale Court");
-            }
+            paleCourtMod = ModHooks.GetMod("Pale Court");
 
             // Check if a mod is installed that added Grimmchild or
             // Carefree Melody as an extra charm
@@ -188,20 +190,15 @@ namespace ExaltationExpanded
         /// </summary>
         private void CheckPaleCourt()
         {
-            // If Pale Court isn't installed, don't bother
-            if (SharedData.paleCourtMod == null)
-            {
-                return;
-            }
+            //SharedData.Log("Checking Pale Court");
 
-            bool defeatedIsma = SharedData.globalSettings.allowPaleCourt &&
-                                SharedData.paleCourtMod.SaveSettings.CompletionIsma.isUnlocked;
+            bool defeatedIsma = IsIsmaDefeated();
             //SharedData.Log($"Defeated Isma: {defeatedIsma}");
             Exaltations.Exaltation dungDefender = SharedData.exaltations["10"];
 
             // Replace Royal Crest with King's Majesty upon unlocking King's Honour
             if (defeatedIsma && 
-                dungDefender is RoyalCrest)
+                !(dungDefender is KingsMajesty))
             {
                 //SharedData.Log($"Replacing Royal Crest");
                 SharedData.exaltations["10"] = new KingsMajesty();
@@ -217,6 +214,24 @@ namespace ExaltationExpanded
                 Sprite sprite = SpriteHelper.GetLocalSprite(SharedData.exaltations["10"].ID);
                 sprites[SharedData.exaltations["10"].ID] = sprite;
             }
+        }
+
+        /// <summary>
+        /// Checks if Isma has been defeated on this save
+        /// </summary>
+        /// <returns></returns>
+        private bool IsIsmaDefeated()
+        {
+            // If we're not using Pale Court, default to no
+            if (paleCourtMod == null ||
+                !SharedData.globalSettings.allowPaleCourt)
+            {
+                return false;
+            }
+
+            object saveSettings = SharedData.GetProperty<IMod, object>(paleCourtMod, "SaveSettings");
+            BossStatue.Completion ismaStatus = SharedData.GetField<object, BossStatue.Completion>(saveSettings, "CompletionIsma");
+            return ismaStatus.isUnlocked;
         }
 
         /// <summary>
