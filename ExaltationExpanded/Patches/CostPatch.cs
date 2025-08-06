@@ -1,4 +1,4 @@
-﻿using Modding;
+﻿ using Modding;
 
 namespace ExaltationExpanded.Patches
 {
@@ -44,7 +44,7 @@ namespace ExaltationExpanded.Patches
                 else if (name.Equals("charmCost_31") &&
                          SharedData.exaltationMod.Settings.DashmasterGlorified)
                 {
-                    return 2; // todo - see hiveblood
+                    return 1; // todo - see hiveblood
                 }
             }
 

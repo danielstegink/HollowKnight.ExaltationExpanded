@@ -12,9 +12,36 @@ Thank you to Xhuis, Théodore and everyone else who made Exaltation; it is an in
 
 Huge shout out to the Hollow Knight modding community as a whole. This was an especially intensive project and I was lost on multiple occasions without their help.
 
-Thank you to Volt for help with bug detection and maintenance.
+Thank you to Volt and BenjaLP211 for help with testing and feedback.
 
 ## Patch Notes
+1.2.0.0
+-	Integrated with DanielSteginkUtils
+-	Complete Mask gives extra masks instead of a healable Lifeblood Mask
+-	Vessel's Might deals its bonus damage as a separate spell attack
+-	Lord Nail uses MOP's animation so it doesn't appear smaller
+-	Radiant Presence stores excess SOUL and uses it to passively heal damage
+-	Rebalanced exaltations to be worth 2 extra notches instead of 1
+-	The following charms have been weakened: 
+	- Grubberfly's Requiem
+	- Vessel's Might
+	- Mark of Betrayal
+	- Nexus of Light
+-	The following charms have been strengthened: 
+	- Complete Mask
+	- Golden Touch
+	- Crushing Blow
+	- Lord Nail
+	- Flukeswarm
+	- Royal Crest / King's Majesty
+	- Abyssal Bloom
+	- Blessing of Unn
+	- Radiant Presence
+	- Knightmare
+	- Loving Lullaby
+-	Renamed Balance patch as Power patch
+	- Swift Focus and Steel Tempest are more powerful than before
+
 1.1.1.0
 -	Fixed integration bug where Pale Court was a required mod
 

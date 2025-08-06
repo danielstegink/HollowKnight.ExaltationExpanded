@@ -6,7 +6,7 @@ This file contains a list of all charm glorifications, their sprites, and their 
 
 ![Grubberfly's Elegy](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/35.png?raw=true)
 
-Removes the health requirement of Grubberfly's Elegy.
+Adds a 1/6 chance to trigger a Grubberfly's Elegy beam attack even when not at full health.
 
 Glorified by completing the Pantheon of the Master with NAIL bound.
 
@@ -14,7 +14,7 @@ Glorified by completing the Pantheon of the Master with NAIL bound.
 
 ![Unbreakable Heart](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/23_G.png?raw=true)
 
-Gives 1 lifeblood Mask which can be healed.
+Increases max health by 1.
 
 Glorified by completing the Pantheon of the Knight with SHELL bound.
 
@@ -22,7 +22,7 @@ Glorified by completing the Pantheon of the Knight with SHELL bound.
 
 ![Unbreakable Greed](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/24_G.png?raw=true)
 
-Increases the amount of geo gained from all sources.
+Increases the amount of geo gained from all sources by 10%
 
 Glorified by completing the Pantheon of the Master with CHARMS bound.
 
@@ -30,7 +30,7 @@ Glorified by completing the Pantheon of the Master with CHARMS bound.
 
 ![Unbreakable Strength](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/25_G.png?raw=true)
 
-Nail attacks and Nail Arts will use a small amount of available SOUL to do increased damage.
+Nail attacks and Nail Arts will use a small amount of available SOUL to do increased damage as a separate spell attack.
 
 Glorified by completing the Pantheon of the Knight with NAIL bound.
 
@@ -38,7 +38,7 @@ Glorified by completing the Pantheon of the Knight with NAIL bound.
 
 ![Heavy Blow](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/15.png?raw=true)
 
-Reduces the stagger requirement for enemies by 2 instead of 1.
+Reduces the stagger requirement for enemies by 3 instead of 1. Combo stagger is reduced by 2 instead of 3.
 
 Glorified by defeating radiant False Knight.
 
@@ -46,7 +46,7 @@ Glorified by defeating radiant False Knight.
 
 ![Longnail](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/18.png?raw=true)
 
-Increases the range of nail attacks by an additional 10%.
+Increases the range of nail attacks by an additional 16.67%, for a total of 31.67%
 
 Glorified by defeating ascended Mantis Lords or completing the Pantheon of the Artist with NAIL bound.
 
@@ -54,7 +54,7 @@ Glorified by defeating ascended Mantis Lords or completing the Pantheon of the A
 
 ![Mark of Pride](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/13.png?raw=true)
 
-Adds a chance to trigger a Grubberfly's Elegy beam attack.
+Adds a 1/6 chance to trigger a Grubberfly's Elegy beam attack.
 
 Glorified by defeating ascended Traitor Lord.
 
@@ -62,7 +62,7 @@ Glorified by defeating ascended Traitor Lord.
 
 ![Flukenest](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/11.png?raw=true)
 
-Increases the damage dealt by Flukenest flukes by 30%.
+Increases the damage dealt by Flukenest flukes by 66.67%
 
 Glorified by defeating radiant Flukemarm.
 
@@ -70,7 +70,7 @@ Glorified by defeating radiant Flukemarm.
 
 ![Defender's Crest](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/10.png?raw=true)
 
-Defender's Crest creates a larger cloud with a higher damage rate.
+Defender's Crest creates a 50% larger cloud with a 100% faster damage rate.
 
 Glorified by defeating ascended Dung Defender.
 
@@ -78,7 +78,7 @@ Glorified by defeating ascended Dung Defender.
 
 ![Deep Focus](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/34.png?raw=true)
 
-Increases healing done by 50%.
+25% chance of healing 3 masks instead of 2.
 
 Glorified by defeating ascended Broken Vessel or completing the Pantheon of the Artist with SHELL bound.
 
@@ -86,7 +86,7 @@ Glorified by defeating ascended Broken Vessel or completing the Pantheon of the 
 
 ![Spore Shroom](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/17.png?raw=true)
 
-Spore Shroom produces a larger cloud with a higher damage rate.
+Spore Shroom creates a 50% larger cloud with a 100% faster damage rate.
 
 Glorified by defeating radiant Elder Hu or completing the Pantheon of the Sage with CHARMS bound.
 
@@ -94,7 +94,7 @@ Glorified by defeating radiant Elder Hu or completing the Pantheon of the Sage w
 
 ![Shape of Unn](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/28.png?raw=true)
 
-Adds a 50% chance for healing to be doubled.
+25% chance of healing 2 masks instead of 1.
 
 Glorified by completing the Pantheon of the Artist with CHARMS bound.
 
@@ -110,7 +110,8 @@ Glorified by defeating ascended Hornet Sentinel.
 
 ![Dream Wielder](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/30.png?raw=true)
 
-Increase the amount of Soul gained on use.
+Increases the amount of SOUL gained from Dream Nail by 300%.
+Additionally stores excess SOUL, with the player being able to heal when using Dream Nail in exchange for 8 times the normal SOUL cost.
 
 Glorified by defeating radiant Xero.
 
@@ -126,7 +127,7 @@ Glorified by defeating ascended Markoth.
 
 ![Grimmchild](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/Grimmchild.png?raw=true)
 
-Grimmchild deals damage at a faster rate.
+Grimmchild deals damage at a 100% faster rate.
 
 Glorified by defeating ascended Grimm.
 
@@ -134,6 +135,6 @@ Glorified by defeating ascended Grimm.
 
 ![Carefree Melody](https://github.com/danielstegink/HollowKnight.ExaltationExpanded/blob/main/ExaltationExpanded/Resources/CarefreeMelody.png?raw=true)
 
-Additional chance to ignore damage.
+Increases chance of ignoring damage by 14.98%
 
 Glorified by defeating ascended Grimm.

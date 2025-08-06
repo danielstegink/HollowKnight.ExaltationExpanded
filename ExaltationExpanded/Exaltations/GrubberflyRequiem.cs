@@ -1,7 +1,5 @@
-﻿using GlobalEnums;
-using HKMirror.Reflection.SingletonClasses;
-using Modding;
-using UnityEngine;
+﻿using DanielSteginkUtils.Helpers.Charms;
+using DanielSteginkUtils.Utilities;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -10,60 +8,51 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class GrubberflyRequiem : Exaltation
     {
-        public override string Name => "Grubberfly's Requiem";
+        public override string Name { get; set; } = "Grubberfly's Requiem";
 
-        public override string Description => "Contains the fury of the grubberfly. Imbues weapons with a holy strength.\n\n" +
-                                                "The bearer will fire beams of white-hot energy from their nail.";
-        public override string ID => "35";
-
-        public override string GodText => "gods of brotherhood";
+        public override string Description { get; set; } = "Contains the fury of the grubberfly. Imbues weapons with a holy strength.\n\n" +
+                                                            "The bearer may fire beams of white-hot energy from their nail.\n\n" +
+                                                            "When the bearer is at full health, they will fire beams";
+        public override string ID { get; set; } = "35";
+        public override string GodText { get; set; } = "gods of brotherhood";
 
         public override bool CanUpgrade()
         {
             return PlayerData.instance.bossDoorStateTier1.boundNail;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-            On.HeroController.Attack += KeepGrubberfly;
+            base.Equip();
+            elegyBeamAttacker = new ElegyBeamAttacker(GetBeamChance());
+            elegyBeamAttacker.Start();
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
-            On.HeroController.Attack -= KeepGrubberfly;
+            base.Unequip();
+            if (elegyBeamAttacker != null)
+            {
+                elegyBeamAttacker.Stop();
+            }
         }
 
         /// <summary>
-        /// Elegy's energy attack is allowed on 1 of 2 conditions:
-        /// 1) Player has max health and Joni's Blessing isn't equipped, or
-        /// 2) Joni's Blessing is equipped and joniBeam is set to true
-        /// I'd rather not tamper with the Player's health values
-        /// So instead I will briefly simulate condition 2, trigger the attack, then reset everything
+        /// Utils helper
         /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        /// <param name="attackDir"></param>
-        private void KeepGrubberfly(On.HeroController.orig_Attack orig, HeroController self, AttackDirection attackDir)
+        private ElegyBeamAttacker elegyBeamAttacker;
+
+        /// <summary>
+        /// Grubberfly's Requiem has a chance to trigger even when the player isn't at full health
+        /// </summary>
+        /// <returns></returns>
+        public int GetBeamChance()
         {
-            // Cache the player data
-            bool origJoniBeam = HeroControllerR.joniBeam;
-            bool origEquip27 = PlayerData.instance.equippedCharm_27;
+            // Per my Utils folder, GE would be worth 12 notches if it didn't require full health
+            float totalValue = 3f * NotchCosts.FullHealthModifier();
 
-            // Set conditions for elegy beam
-            if (PlayerData.instance.equippedCharm_35)
-            {
-                HeroControllerR.joniBeam = true;
-                PlayerData.instance.equippedCharm_27 = true;
-            }
-
-            // Perform the attack
-            orig(self, attackDir);
-
-            // Reset the player data
-            HeroControllerR.joniBeam = origJoniBeam;
-            PlayerData.instance.equippedCharm_27 = origEquip27;
+            // That means for 2 notches, we can have a 1/6 chance of the beam triggering
+            return (int)(2 * 100 / totalValue);
         }
     }
 }

@@ -1,16 +1,16 @@
-﻿using ExaltationExpanded.Helpers;
+﻿using DanielSteginkUtils.Utilities;
+using ExaltationExpanded.Helpers;
 using HutongGames.PlayMaker;
 using Modding;
 using SFCore;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ExaltationExpanded.Patches
 {
     /// <summary>
     /// Upon defeating Nailsage Sly on radiant difficulty, Nailsage's Patience and 
-    /// Nailsage's Tenacity are unlocked as separate charms.
+    /// Nailsage's Tenacity are unlocked as separate charms
     /// </summary>
     public class NailsageGlory : ExaltationPatch
     {
@@ -43,11 +43,7 @@ namespace ExaltationExpanded.Patches
             //SharedData.Log("Adding Nailsage's Patience as a new charm.");
 
             // Add the charm to the charm list and get its new ID number
-            Texture2D texture = new Texture2D(2, 2);
-            Sprite sprite = Sprite.Create(texture,
-                                            new Rect(0, 0, texture.width, texture.height),
-                                            new Vector2(0.5f, 0.5f));
-            charmId = CharmHelper.AddSprites(new Sprite[] { sprite })[0];
+            charmId = CharmHelper.AddSprites(new Sprite[] { nspSprite })[0];
 
             // Apply charm effects
             ModHooks.HitInstanceHook += ApplyNSG;
@@ -67,21 +63,18 @@ namespace ExaltationExpanded.Patches
         /// <returns></returns>
         private HitInstance ApplyNSG(Fsm owner, HitInstance hit)
         {
-            if ((SharedData.nailAttackNames.Contains(hit.Source.name) || 
-                    SharedData.nailArtNames.Contains(hit.Source.name)) &&
+            if (Logic.IsNailAttack(hit, true, false) &&
                 SharedData.saveSettings.nsgEquipped)
             {
-                // Nailsage's Patience changes nail hits into spells
-                // so that they bypass armor but don't gain SOUL.
+                // Nailsage's Patience changes nail hits into spells so that they bypass armor but don't gain SOUL.
                 if (!SharedData.exaltationMod.Settings.Patience)
                 {
                     hit.AttackType = AttackTypes.Spell;
                 }
-                // Nailsage's Tenacity increases nail damage dealt
-                // based on how much damage the player has taken.
+                // Nailsage's Tenacity increases nail damage dealt based on how much damage the player has taken.
                 else
                 {
-                    float modifier = 0.03f * (PlayerData.instance.maxHealth - PlayerData.instance.health);
+                    float modifier = 0.03f * (PlayerData.instance.GetInt("maxHealth") - PlayerData.instance.GetInt("health"));
                     int bonusDamage = (int)(hit.DamageDealt * modifier);
                     //SharedData.Log($"Increasing damage {hit.DamageDealt} by {bonusDamage} ({modifier * 100}%)");
 
@@ -93,8 +86,7 @@ namespace ExaltationExpanded.Patches
         }
 
     /// <summary>
-    /// Apply NMG's cooldown reduction so long as one of them is equipped,
-    /// but don't stack it
+    /// Apply NMG's cooldown reduction so long as one of them is equipped, but don't stack it
     /// </summary>
     /// <param name="orig"></param>
     /// <param name="self"></param>
@@ -106,7 +98,7 @@ namespace ExaltationExpanded.Patches
             if (SharedData.saveSettings.nsgEquipped)
             {
                 //SharedData.Log($"Applying NSG cooldown");
-                SharedData.SetField(self, "nailChargeTime", self.NAIL_CHARGE_TIME_CHARM);
+                ClassIntegrations.SetField(self, "nailChargeTime", self.NAIL_CHARGE_TIME_CHARM);
             }
             //SharedData.Log($"NSG Final charge time: {SharedData.GetField<HeroController, float>(self, "nailChargeTime")}");
 

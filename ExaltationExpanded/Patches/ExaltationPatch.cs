@@ -1,4 +1,4 @@
-﻿namespace ExaltationExpanded.Patches
+﻿ namespace ExaltationExpanded.Patches
 {
     /// <summary>
     /// Template for patches for Exaltation

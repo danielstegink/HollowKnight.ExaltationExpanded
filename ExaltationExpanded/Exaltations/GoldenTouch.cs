@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DanielSteginkUtils.Helpers.Attributes;
+using DanielSteginkUtils.Utilities;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -7,51 +8,48 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class GoldenTouch : Exaltation
     {
-        public override string Name => "Golden Touch";
-        public override string Description => "A symbol of wealth and ambition.\n\n" + 
-                                                "Causes the bearer to find more Geo.";
-        public override string ID => "24_G";
-
+        public override string Name { get; set; } = "Golden Touch";
+        public override string Description { get; set; } = "A symbol of wealth and ambition.\n\n" + 
+                                                            "Causes the bearer to find more Geo.";
+        public override string ID { get; set; } = "24_G";
         public override int IntID => 24;
-
-        public override string GodText => "gods of brotherhood";
+        public override string GodText { get; set; } = "gods of brotherhood";
 
         public override bool CanUpgrade()
         {
             return PlayerData.instance.bossDoorStateTier1.boundCharms;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-            On.HeroController.AddGeo += AddGeo;
+            base.Equip();
+            helper = new GeoHelper(GetModifier());
+            helper.Start();
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
-            On.HeroController.AddGeo -= AddGeo;
+            base.Unequip();
+            if (helper != null)
+            {
+                helper.Stop();
+            }
         }
 
         /// <summary>
-        /// Unbreakable Greed increases Geo dropped by enemies by 20%.
-        /// The exalted version will increase all Geo dropped by 10%.
-        /// This stacks with the original 20% to a total of 32% dropped from enemies.
+        /// Utils helper
         /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        /// <param name="amount"></param>
-        private void AddGeo(On.HeroController.orig_AddGeo orig, HeroController self, int amount)
-        {
-            //SharedData.Log("Adding geo");
-            if (PlayerData.instance.equippedCharm_24)
-            {
-                int bonusAmount = Math.Max(amount / 10, 1);
-                //SharedData.Log($"Unbreakable greed confirmed. Incrementing {amount} by {bonusAmount}");
-                amount += bonusAmount;
-            }
+        private GeoHelper helper;
 
-            orig(self, amount);
+        /// <summary>
+        /// Golden Touch increases geo gained from all sources
+        /// </summary>
+        /// <returns></returns>
+        private float GetModifier()
+        {
+            // Per my Utils, extra Geo is worth 5% per notch
+            /// So for 2 notches, it is worth 10%
+            return 1f + 2 * NotchCosts.GeoPerNotch();
         }
     }
 }

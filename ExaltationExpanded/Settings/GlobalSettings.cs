@@ -11,5 +11,7 @@
         public bool allowCostPatch = true;
 
         public bool allowVoidSoul = true;
+
+        public bool allowCharmChanger = true;
     }
 }

@@ -1,6 +1,5 @@
-﻿using GlobalEnums;
-using System;
-using UnityEngine;
+﻿using DanielSteginkUtils.Helpers.Charms;
+using DanielSteginkUtils.Utilities;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -9,80 +8,49 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class MarkOfBetrayal : Exaltation
     {
-        public override string Name => "Mark of Betrayal";
-        public override string Description => "The mark of one who betrayed their tribe for power.\n\n" +
-                                                "Greatly increases the range of the bearer's nail, and gives their attacks a chance to send shockwaves towards their enemies.";
-        public override string ID => "13";
-
-        public override string GodText => "god of anger";
+        public override string Name { get; set; } = "Mark of Betrayal";
+        public override string Description { get; set; } = "The mark of one who betrayed their tribe for power.\n\n" +
+                                                            "Greatly increases the range of the bearer's nail, and gives their attacks a chance to send shockwaves towards their enemies.";
+        public override string ID { get; set; } = "13";
+        public override string GodText { get; set; } = "god of anger";
 
         public override bool CanUpgrade()
         {
             return PlayerData.instance.statueStateTraitorLord.completedTier2;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-            On.HeroController.Attack += SendElegyBeam;
+            base.Equip();
+            elegyBeamAttacker = new ElegyBeamAttacker(GetBeamChance());
+            elegyBeamAttacker.Start();
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
-            On.HeroController.Attack -= SendElegyBeam;
+            base.Unequip();
+            if (elegyBeamAttacker != null)
+            {
+                elegyBeamAttacker.Stop();
+            }
         }
 
         /// <summary>
-        /// MOB gives nail attacks a 20% chance to trigger the beam attack associated with Grubberfly's Elegy
+        /// Utils folder
         /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        /// <param name="attackDir"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void SendElegyBeam(On.HeroController.orig_Attack orig, HeroController self, AttackDirection attackDir)
+        private ElegyBeamAttacker elegyBeamAttacker;
+
+        /// <summary>
+        /// Mark of Betrayal has a chance to send Grubberfly's Elegy beam attacks when performing nail strikes
+        /// </summary>
+        /// <returns></returns>
+        public int GetBeamChance()
         {
-            orig(self, attackDir);
+            // Per my Utils folder, GE would be worth 12 notches if it didn't require full health
+            float totalValue = 3f * NotchCosts.FullHealthModifier();
 
-            if (PlayerData.instance.equippedCharm_13)
-            {
-                int random = UnityEngine.Random.Range(1, 101);
-                if (random <= 20)
-                {
-                    GameObject grubberFlyBeam;
-
-                    switch (attackDir)
-                    {
-                        case AttackDirection.normal:
-                            if (self.transform.localScale.x < 0f)
-                            {
-                                grubberFlyBeam = self.grubberFlyBeamPrefabR.Spawn(self.transform.position);
-                            }
-                            else
-                            {
-                                grubberFlyBeam = self.grubberFlyBeamPrefabL.Spawn(self.transform.position);
-                            }
-
-                            grubberFlyBeam.transform.SetScaleY(1.35f);
-
-                            break;
-                        case AttackDirection.upward:
-                            grubberFlyBeam = self.grubberFlyBeamPrefabU.Spawn(self.transform.position);
-                            grubberFlyBeam.transform.SetScaleY(self.transform.localScale.x);
-                            grubberFlyBeam.transform.localEulerAngles = new Vector3(0f, 0f, 270f);
-                            grubberFlyBeam.transform.SetScaleY(grubberFlyBeam.transform.localScale.y * 1.35f);
-
-                            break;
-                        case AttackDirection.downward:
-                            grubberFlyBeam = self.grubberFlyBeamPrefabD.Spawn(self.transform.position);
-                            grubberFlyBeam.transform.SetScaleY(self.transform.localScale.x);
-                            grubberFlyBeam.transform.localEulerAngles = new Vector3(0f, 0f, 90f);
-                            grubberFlyBeam.transform.SetScaleY(grubberFlyBeam.transform.localScale.y * 1.35f);
-
-                            break;
-                    }
-                }
-            }
+            // That means for 2 notches, we can have a 1/6 chance of the beam triggering
+            return (int)(2 * 100 / totalValue);
         }
     }
 }

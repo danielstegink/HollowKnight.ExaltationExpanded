@@ -1,7 +1,6 @@
-﻿using GlobalEnums;
-using Modding;
+﻿using DanielSteginkUtils.Utilities;
 using System;
-using UnityEngine;
+using DanielSteginkUtils.Helpers.Shields;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -10,13 +9,10 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class LovingLullaby : Exaltation
     {
-        public override string Name => "Loving Lullaby";
-
-        public override string Description => "Contains a song that promises sweet dreams and happiness for all.";
-
-        public override string ID => GetMelodyId();
-
-        public override string GodText => "god of the troupe";
+        public override string Name { get; set; } = "Loving Lullaby";
+        public override string Description { get; set; } = "Contains a song that promises sweet dreams and happiness for all.";
+        public override string ID { get => GetMelodyId(); set => throw new NotImplementedException(); }
+        public override string GodText { get; set; } = "god of the troupe";
 
         /// <summary>
         /// Determines the current ID for Grimmchild
@@ -42,57 +38,44 @@ namespace ExaltationExpanded.Exaltations
                 PlayerData.instance.grimmChildLevel >= 4;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            ModHooks.TakeHealthHook += BuffMelody;
+            base.Equip();
+
+            carefreeHelper = new CarefreeHelper(ShieldChance());
+            carefreeHelper.Start();
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            ModHooks.TakeHealthHook -= BuffMelody;
+            base.Unequip();
+
+            if (carefreeHelper != null)
+            {
+                carefreeHelper.Stop();
+            }
         }
 
         /// <summary>
-        /// LL adds a flat 10% chance of negating damage taken
+        /// Utils helper
+        /// </summary>
+        private CarefreeHelper carefreeHelper;
+
+        /// <summary>
+        /// Loving Lullaby increases the chance of Carefree Melody triggering
         /// </summary>
         /// <param name="damage"></param>
         /// <returns></returns>
-        private int BuffMelody(int damage)
+        private int ShieldChance()
         {
-            if (damage > 0 &&
-                IsEquipped())
-            {
-                GameObject carefreeShield = HeroController.instance.carefreeShield;
-                if (carefreeShield != null)
-                {
-                    int random = UnityEngine.Random.Range(1, 101);
-                    //SharedData.Log($"CM detected. Dice rolled: {random} out of 100");
-                    if (random <= 10)
-                    {
-                        //SharedData.Log("LL triggered. Damage negated");
-                        carefreeShield.SetActive(true);
-                        damage = 0;
-                    }
-                }
-            }
+            // Per my Utils, blocking an attack is worth a 7.49% chance per notch
+            // For 2 notches, thats a 15% chance
+            float bonus = 2 * NotchCosts.ShieldChancePerNotch();
 
-            return damage;
-        }
-
-        /// <summary>
-        /// Checks if Loving Lullaby is equipped
-        /// </summary>
-        /// <returns></returns>
-        private bool IsEquipped()
-        {
-            if (GetMelodyId().Equals("40"))
-            {
-                return PlayerData.instance.equippedCharm_40;
-            }
-            else
-            {
-                return PlayerData.instance.GetBool($"equippedCharm_{SharedData.carefreeGrimmId}");
-            }
+            // However, we are trying to augment a shield we have no control over, 
+            // so we actually want to set up a second shield, and calculate what
+            // its probability should be to function as an increase to the first shield
+            return Calculations.GetSecondMelodyShield(bonus);
         }
     }
 }

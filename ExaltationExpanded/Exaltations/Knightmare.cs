@@ -1,6 +1,5 @@
-﻿using Modding;
+﻿using DanielSteginkUtils.Helpers.Charms.Pets;
 using System;
-using UnityEngine;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -9,14 +8,11 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class Knightmare : Exaltation
     {
-        public override string Name => "Knightmare";
-
-        public override string Description => "Symbol of a transformed ritual.\n\n" +
-                                                "Contains a living, scarlet flame.";
-
-        public override string ID => GetGrimmchildId();
-
-        public override string GodText => "god of the troupe";
+        public override string Name { get; set; } = "Knightmare";
+        public override string Description { get; set; } = "Symbol of a transformed ritual.\n\n" +
+                                                            "Contains a living, scarlet flame.";
+        public override string ID { get => GetGrimmchildId(); set => throw new NotImplementedException(); }
+        public override string GodText { get; set; } = "god of the troupe";
 
         /// <summary>
         /// Determines the current ID for Grimmchild
@@ -26,7 +22,7 @@ namespace ExaltationExpanded.Exaltations
         private string GetGrimmchildId()
         {
             // Check if the default charm is Grimmchild
-            if (PlayerData.instance.grimmChildLevel < 5)
+            if (PlayerData.instance.GetInt("grimmChildLevel") < 5)
             {
                 return "40";
             }
@@ -39,40 +35,41 @@ namespace ExaltationExpanded.Exaltations
         public override bool CanUpgrade()
         {
             return PlayerData.instance.statueStateGrimm.completedTier2 &&
-                PlayerData.instance.grimmChildLevel >= 4;
+                    PlayerData.instance.GetInt("grimmChildLevel") >= 4;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            ModHooks.ObjectPoolSpawnHook += BuffGrimmchild;
+            base.Equip();
+
+            grimmchildHelper = new GrimmchildHelper(1f, 1 / GetModifier());
+            grimmchildHelper.Start();
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            ModHooks.ObjectPoolSpawnHook -= BuffGrimmchild;
+            base.Unequip();
+
+            if (grimmchildHelper != null)
+            {
+                grimmchildHelper.Stop();
+            }
         }
 
         /// <summary>
-        /// Knightmare increases the Grimmchild's attack speed by 20%
+        /// Utils helper
         /// </summary>
-        /// <param name="gameObject"></param>
+        private GrimmchildHelper grimmchildHelper;
+
+        /// <summary>
+        /// Knightmare increases the attack speed of Grimmchild
+        /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        private GameObject BuffGrimmchild(GameObject gameObject)
+        private float GetModifier()
         {
-            if (gameObject.name.Equals("Grimmchild(Clone)"))
-            {
-                //SharedData.Log($"Grimmchild found: {gameObject.name}");
-
-                PlayMakerFSM fsm = FSMUtility.LocateFSM(gameObject, "Control");
-
-                // The wait time between attacks is a float value in the No Target state
-                float waitTime = SFCore.Utils.FsmUtil.GetAction<HutongGames.PlayMaker.Actions.SetFloatValue>(fsm, "No Target", 0).floatValue.Value;
-                SFCore.Utils.FsmUtil.GetAction<HutongGames.PlayMaker.Actions.SetFloatValue>(fsm, "No Target", 0).floatValue.Value = waitTime * 0.8f;
-                //SharedData.Log("Grimmchild wait time reduced to 80%");
-            }
-
-            return gameObject;
+            // Grimmchild costs 2 notches
+            // So for 2 notches we can increase its damage rate by 100%
+            return 2f;
         }
     }
 }

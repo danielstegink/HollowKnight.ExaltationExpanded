@@ -1,6 +1,4 @@
-﻿using Modding;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using DanielSteginkUtils.Helpers.Charms.Dung;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -9,76 +7,70 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class RoyalCrest : Exaltation
     {
-        public override string Name => "Royal Crest";
-        public override string Description => "The crest of a loyal knight of the Pale King.\n\n" +
-                                                "Causes the bearer to emit a powerful odour.";
-        public override string ID => "10";
-
-        public override string GodText => "god of honour";
-
-        /// <summary>
-        /// Stores the original stats of the dung cloud
-        /// </summary>
-        Dictionary<string, float> dungStats = new Dictionary<string, float>();
+        public override string Name { get; set; } = "Royal Crest";
+        public override string Description { get; set; } = "The crest of a loyal knight of the Pale King.\n\n" +
+                                                            "Causes the bearer to emit a powerful odour.";
+        public override string ID { get; set; } = "10";
+        public override string GodText { get; set; } = "god of honour";
 
         public override bool CanUpgrade()
         {
             return PlayerData.instance.statueStateDungDefender.completedTier2;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-            ModHooks.ObjectPoolSpawnHook += BuffDungCloud;
+            base.Equip();
+
+            dungSizeHelper = new DungSizeHelper(SharedData.modName, ID, GetSizeModifier());
+            dungSizeHelper.Start();
+
+            dungDamageHelper = new DungDamageHelper(SharedData.modName, ID, GetDamageModifier());
+            dungDamageHelper.Start();
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
-            ModHooks.ObjectPoolSpawnHook -= BuffDungCloud;
+            base.Unequip();
+
+            if (dungSizeHelper != null)
+            {
+                dungSizeHelper.Stop();
+            }
+
+            if (dungDamageHelper != null)
+            {
+                dungDamageHelper.Stop();
+            }
         }
 
         /// <summary>
-        /// Royal Crest increases the damage rate and size of Defender's Crest by 10%
+        /// Adjusts cloud size
         /// </summary>
-        /// <param name="gameObject"></param>
+        private DungSizeHelper dungSizeHelper;
+
+        /// <summary>
+        /// Adjusts cloud damage
+        /// </summary>
+        private DungDamageHelper dungDamageHelper;
+
+        /// <summary>
+        /// If we spend 1 notch to increase the cloud size, we want to hit 
+        /// 100% more enemies, so a 50% boost should be sufficent
+        /// </summary>
         /// <returns></returns>
-        private GameObject BuffDungCloud(GameObject gameObject)
+        private float GetSizeModifier()
         {
-            if (gameObject.name.Equals("Knight Dung Trail(Clone)") &&
-                PlayerData.instance.equippedCharm_10)
-            {
-                StoreOriginalStats(gameObject);
-
-                gameObject.GetComponent<DamageEffectTicker>().damageInterval = dungStats["Dmg"] * 0.9f;
-
-                gameObject.transform.localScale = new Vector3(dungStats["X"] * 1.1f, dungStats["Y"] * 1.1f);
-            }
-
-            return gameObject;
+            return 1.5f;
         }
 
         /// <summary>
-        /// Stores the original stats for the dung cloud so that 
-        /// we can safely upgrade it only once
+        /// If we spend 1 notch to boost damage on a 1 notch charm, that will be worth a 100% increase
         /// </summary>
-        /// <param name="gameObject"></param>
-        private void StoreOriginalStats(GameObject gameObject)
+        /// <returns></returns>
+        private float GetDamageModifier()
         {
-            if (!dungStats.ContainsKey("X"))
-            {
-                dungStats.Add("X", gameObject.transform.localScale.x);
-            }
-
-            if (!dungStats.ContainsKey("Y"))
-            {
-                dungStats.Add("Y", gameObject.transform.localScale.y);
-            }
-
-            if (!dungStats.ContainsKey("Dmg"))
-            {
-                dungStats.Add("Dmg", gameObject.GetComponent<DamageEffectTicker>().damageInterval);
-            }
+            return 2f;
         }
     }
 }

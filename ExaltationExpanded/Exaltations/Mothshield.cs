@@ -8,33 +8,31 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class Mothshield : Exaltation
     {
-        public override string Name => "Mothshield";
-        public override string Description => "Defensive charm once wielded by a hermetic god.\n\n" +
-                                                "Conjures two shields that follow the bearer and attempt to protect them.";
-        public override string ID => "38";
-
-        public override string GodText => "god of isolation";
+        public override string Name { get; set; } = "Mothshield";
+        public override string Description { get; set; } = "Defensive charm once wielded by a hermetic god.\n\n" +
+                                                            "Conjures two shields that follow the bearer and attempt to protect them.";
+        public override string ID { get; set; } = "38";
+        public override string GodText { get; set; } = "god of isolation";
 
         public override bool CanUpgrade()
         {
             return PlayerData.instance.statueStateMarkoth.completedTier2;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-
+            base.Equip();
             ModHooks.ObjectPoolSpawnHook += SpawnExtraShield;
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
+            base.Unequip();
             ModHooks.ObjectPoolSpawnHook -= SpawnExtraShield;
         }
 
         /// <summary>
-        /// Mothshield spawns a second shield on the opposite side
+        /// Mothshield spawns a second shield
         /// </summary>
         /// <param name="gameObject"></param>
         /// <returns></returns>
@@ -42,11 +40,8 @@ namespace ExaltationExpanded.Exaltations
         {
             if (gameObject.name.Contains("Shield"))
             {
-                GameObject extraShield = GameObject.Instantiate(gameObject,
-                    new Vector3(HeroController.instance.transform.GetPositionX(),
-                    HeroController.instance.transform.GetPositionY()),
-                    Quaternion.identity);
-                extraShield.transform.Rotate(0, 0, 180);
+                GameObject shield = GameObject.Instantiate(gameObject, gameObject.transform.position, Quaternion.identity);
+                shield.transform.Rotate(0, 0, 180);
             }
 
             return gameObject;

@@ -1,5 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DanielSteginkUtils.Helpers.Attributes;
+using DanielSteginkUtils.Utilities;
+using System;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -8,31 +9,27 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class VesselsMight : Exaltation
     {
-        public override string Name => "Vessel's Might";
-
-        public override string Description => "Embodies the strength of the Hollow Knight's sacrifice. \n\n" +
-                                                "Unites the bearer with their spirit, increasing their strength and infusing their attacks with SOUL.";
-        public override string ID => "25_G";
-
+        public override string Name { get; set; } = "Vessel's Might";
+        public override string Description { get; set; } = "Embodies the strength of the Hollow Knight's sacrifice. \n\n" +
+                                                            "Unites the bearer with their spirit, increasing their strength and infusing their attacks with SOUL.";
+        public override string ID { get; set; } = "25_G";
         public override int IntID => 25;
-
-        public override string GodText => "god of nothingness";
+        public override string GodText { get; set; } = "god of nothingness";
 
         public override bool CanUpgrade()
         {
             return PlayerData.instance.bossDoorStateTier4.boundNail;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-
+            base.Equip();
             On.HealthManager.TakeDamage += BuffNail;
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
+            base.Unequip();
             On.HealthManager.TakeDamage -= BuffNail;
         }
 
@@ -45,58 +42,36 @@ namespace ExaltationExpanded.Exaltations
         /// <exception cref="NotImplementedException"></exception>
         private void BuffNail(On.HealthManager.orig_TakeDamage orig, HealthManager self, HitInstance hitInstance)
         {
-            bool isNailAttack = SharedData.nailAttackNames.Contains(hitInstance.Source.name) ||
-                                SharedData.nailArtNames.Contains(hitInstance.Source.name) ||
-                                hitInstance.Source.name.Contains("Grubberfly");
-
-            if (PlayerData.instance.equippedCharm_25 &&
-                isNailAttack)
+            if (Logic.IsNailAttack(hitInstance))
             {
-                // Calculate how much SOUL to spend and how much damage its worth
-                int soulUsed = GetSoul();
-                float damagePerSoul = GetDamagePerSoul();
-                int damage = (int)Math.Floor(soulUsed * damagePerSoul);
+                // Per my Utils, 2 notches is worth a 20% increase in Nail damage
+                float nailDamage = PlayerData.instance.GetInt("nailDamage") * 2 * NotchCosts.NailDamagePerNotch();
 
-                HeroController.instance.TakeMP(soulUsed);
-                hitInstance.DamageDealt += damage;
-                //SharedData.Log($"Nail damage increased by {damage} in exchange for {soulUsed} SOUL");
+                // VM uses SOUL to increase nail damage, so its like casting a spell on top of a nail attack
+                // So we will take the nail damage above and convert it to Spell damage
+                float maxSpellDamage = Calculations.NailDamageToSpellDamage(nailDamage);
+
+                // Per Calculations, the most similar spell to nail attacks is Shriek, so we will use Shriek to 
+                // calculate how much SOUL we should spend on our new spell damage
+                float damagePerSoul = Calculations.DamagePerSoul(Calculations.SpellType.AbyssShriek);
+                float soulPerDamage = 1 / damagePerSoul;
+                float maxSoul = maxSpellDamage * soulPerDamage;
+                int soulUsed = PlayerValues.SoulToSpend((int)maxSoul);
+
+                // We then have to calculate how much damage we can do with the SOUL available and use it to launch a spell attack
+                if (soulUsed > 0)
+                {
+                    float damage = soulUsed * soulPerDamage;
+                    int damageInt = (int)damage;
+
+                    // We will use the version that creates a separate object so that we don't create an infinite loop of buffed nail attacks
+                    DamageHelper.DealDamage(self, damageInt, AttackTypes.Spell, "ExaltationExpanded.VesselsMight");
+                    HeroController.instance.TakeMP(soulUsed);
+                    //SharedData.Log($"Nail damage increased by {damageInt} in exchange for {soulUsed} SOUL");
+                }
             }
 
             orig(self, hitInstance);
-        }
-
-
-        /// <summary>
-        /// Get how much SOUL to spend on the attack
-        /// </summary>
-        /// <returns></returns>
-        private int GetSoul()
-        {
-            // Vessel's Might essentially adds a Spell cast to our attack
-            // For 3 notches, Shaman Stone and Quick Slash both increase DPS
-            //      by 40%, so for 1 notch we should aim for a 13% increase
-            //      in DPS, cast 13% of a Spell
-            float baseSoul = 33f;
-            int maxSoul = (int)Math.Floor(baseSoul * 0.4f / 3f);
-
-            // Remember to not use more SOUL than we have
-            return Math.Min(maxSoul, PlayerData.instance.MPCharge);
-        }
-
-        /// <summary>
-        /// Get how much damage to deal per SOUL used
-        /// </summary>
-        /// <returns></returns>
-        private float GetDamagePerSoul()
-        {
-            // The most similar spell to nail attacks is arguably 
-            //      Dive because its I-Frames make it easy to use
-            // D-Dive has 3 parts that ultimately deal about 60
-            //      damage to whoever we land on, so we'll use that
-            //      as our point of reference.
-            float baseDamage = 60;
-            float soulSpent = 33;
-            return baseDamage / soulSpent;
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using Exaltation;
-using ExaltationExpanded.Exaltations;
+﻿using DanielSteginkUtils.Helpers.Charms;
+using DanielSteginkUtils.Utilities;
+using Exaltation;
 using ExaltationExpanded.Helpers;
 using ExaltationExpanded.Settings;
 using Modding;
-using SFCore.Generics;
-using SFCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,53 +13,39 @@ using UnityEngine.UI;
 
 namespace ExaltationExpanded
 {
-    public class ExaltationExpanded : FullSettingsMod<LocalSaveSettings, GlobalSettings>, ICustomMenuMod
+    public class ExaltationExpanded : Mod, ILocalSettings<LocalSaveSettings>, IGlobalSettings<GlobalSettings>, ICustomMenuMod
     {
-        public override string GetVersion() => "1.1.1.0";
+        public override string GetVersion() => "1.2.0.0";
 
         public override int LoadPriority() => 2;
 
         #region Save Settings
-        public new void OnLoadGlobal(GlobalSettings s)
+        public void OnLoadGlobal(GlobalSettings s)
         {
             SharedData.globalSettings = s;
         }
 
-        public new GlobalSettings OnSaveGlobal()
+        public GlobalSettings OnSaveGlobal()
         {
             return SharedData.globalSettings;
         }
 
-        public new void OnLoadLocal(LocalSaveSettings s)
+        public void OnLoadLocal(LocalSaveSettings s)
         {
+            //SharedData.Log("Loading save settings");
             SharedData.saveSettings = s;
         }
 
-        public new LocalSaveSettings OnSaveLocal()
+        public LocalSaveSettings OnSaveLocal()
         {
             return SharedData.saveSettings;
         }
         #endregion
 
         /// <summary>
-        /// Cache sprites for future reference
-        /// </summary>
-        private Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
-
-        /// <summary>
-        /// Index of the current save file
-        /// </summary>
-        private int currentSave = -1;
-
-        /// <summary>
         /// Canvas for displaying glorification text
         /// </summary>
         private GameObject canvas;
-
-        /// <summary>
-        /// Stores the Pale Court Mod if its installed
-        /// </summary>
-        private IMod paleCourtMod;
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
@@ -73,24 +58,12 @@ namespace ExaltationExpanded
                 throw new MissingReferenceException("Exaltation not installed.");
             }
 
-            // Check if Pale Court is installed
-            paleCourtMod = ModHooks.GetMod("Pale Court");
+            // Check if external mods are installed
+            SharedData.paleCourt.paleCourtMod = ModHooks.GetMod("Pale Court");
+            //SharedData.charmChanger.charmChangerMod = ModHooks.GetMod("Pale Court");
 
-            // Check if a mod is installed that added Grimmchild or
-            // Carefree Melody as an extra charm
-            //SharedData.Log("Checking for second CarefreeGrimm charm");
-            int customCharmCount = FullSettingsMod<SFCoreSaveSettings, SFCoreGlobalSettings>.GlobalSettings.MaxCustomCharms;
-            for (int i = 41; i <= 40 + customCharmCount; i++)
-            {
-                string charmName = Language.Language.Get($"CHARM_NAME_{i}", "UI");
-                //SharedData.Log($"Charm {i}'s name: {charmName}");
-                if (charmName.Equals("Carefree Melody") ||
-                    charmName.Equals("Grimmchild"))
-                {
-                    SharedData.carefreeGrimmId = i;
-                    break;
-                }
-            }
+            // Check if a mod is installed that added Grimmchild or Carefree Melody as an extra charm
+            SharedData.carefreeGrimmId = GetModCharmHelper.GetCharmId(new string[] { "Carefree Melody", "Grimmchild" });
             //SharedData.Log($"CarefreeGrimm ID: {SharedData.carefreeGrimmId}");
 
             SharedData.Log("Loading sprites");
@@ -105,7 +78,7 @@ namespace ExaltationExpanded
             SharedData.Log("Applying patches");
             SharedData.nailsageGlory.ApplyHooks();
             SharedData.costPatch.ApplyHooks();
-            SharedData.balancePatch.ApplyHooks();
+            SharedData.powerPatch.ApplyHooks();
             SharedData.voidSoul.ApplyHooks();
 
             SharedData.Log("Initialized");
@@ -120,19 +93,19 @@ namespace ExaltationExpanded
             {
                 //SharedData.Log($"Loading sprite for {key}");
                 Sprite sprite = SpriteHelper.GetLocalSprite(key);
-                sprites.Add(key, sprite);
+                SharedData.sprites.Add(key, sprite);
             }
         }
 
+        #region On Save
         /// <summary>
-        /// When a new game is loaded, the exaltations need to be reset
-        /// in case the new save doesn't have them unlocked
+        /// When a new game is loaded, the exaltations need to be reset in case the new save doesn't have them unlocked
         /// </summary>
         /// <param name="saveIndex"></param>
         private void NewGame(int saveIndex)
         {
-            //SharedData.Log($"Resetting exaltations for a new game: {saveIndex}");
-            currentSave = saveIndex;
+            //SharedData.Log("Loading new game");
+            SharedData.paleCourt.CheckDefendersCrest();
 
             foreach (string key in SharedData.exaltations.Keys)
             {
@@ -146,21 +119,19 @@ namespace ExaltationExpanded
                     IsUpgraded(key))
                 {
                     exaltation.Upgrade();
-                    //SharedData.Log($"Exaltation {key} loaded from save");
+                    //SharedData.Log($"Exaltation {exaltation.Name} loaded from save");
                 }
             }
         }
 
-        #region On Save
         /// <summary>
-        /// Exaltation settings update when we save after a Godhome battle, so this is the best
-        /// time to update charms
+        /// Exaltation settings update when we save after a Godhome battle, so this is the best time to update charms
         /// </summary>
         /// <param name="obj"></param>
         private void SaveGame(int obj)
         {
             //SharedData.Log($"Checking if charms need to be upgraded");
-            CheckPaleCourt();
+            SharedData.paleCourt.CheckDefendersCrest();
 
             // Go through each exaltation and see if it needs to be upgraded
             string gloryText = "";
@@ -173,7 +144,7 @@ namespace ExaltationExpanded
                     SharedData.saveSettings.Exalted.Add(key);
                     exaltation.Upgrade();
                     gloryText = $"Charms glorified by the {exaltation.GodText}";
-                    //SharedData.Log($"Exaltation {key} added to save");
+                    SharedData.Log($"Exaltation {key} added to save");
                 }
             }
 
@@ -186,57 +157,7 @@ namespace ExaltationExpanded
         }
 
         /// <summary>
-        /// Integration step for Pale Court mod
-        /// </summary>
-        private void CheckPaleCourt()
-        {
-            //SharedData.Log("Checking Pale Court");
-
-            bool defeatedIsma = IsIsmaDefeated();
-            //SharedData.Log($"Defeated Isma: {defeatedIsma}");
-            Exaltations.Exaltation dungDefender = SharedData.exaltations["10"];
-
-            // Replace Royal Crest with King's Majesty upon unlocking King's Honour
-            if (defeatedIsma && 
-                !(dungDefender is KingsMajesty))
-            {
-                //SharedData.Log($"Replacing Royal Crest");
-                SharedData.exaltations["10"] = new KingsMajesty();
-                string id = SharedData.exaltations["10"].ID + "_P";
-                Sprite sprite = SpriteHelper.GetLocalSprite(id);
-                sprites[SharedData.exaltations["10"].ID] = sprite;
-            }
-            else if (!defeatedIsma && 
-                     dungDefender is KingsMajesty) // Make sure to reset to Royal Crest if Isma hasn't been defeated in this save
-            {
-                //SharedData.Log($"Replacing King's Majesty");
-                SharedData.exaltations["10"] = new RoyalCrest();
-                Sprite sprite = SpriteHelper.GetLocalSprite(SharedData.exaltations["10"].ID);
-                sprites[SharedData.exaltations["10"].ID] = sprite;
-            }
-        }
-
-        /// <summary>
-        /// Checks if Isma has been defeated on this save
-        /// </summary>
-        /// <returns></returns>
-        private bool IsIsmaDefeated()
-        {
-            // If we're not using Pale Court, default to no
-            if (paleCourtMod == null ||
-                !SharedData.globalSettings.allowPaleCourt)
-            {
-                return false;
-            }
-
-            object saveSettings = SharedData.GetProperty<IMod, object>(paleCourtMod, "SaveSettings");
-            BossStatue.Completion ismaStatus = SharedData.GetField<object, BossStatue.Completion>(saveSettings, "CompletionIsma");
-            return ismaStatus.isUnlocked;
-        }
-
-        /// <summary>
-        /// Displays a message about the charm being glorified. Code extracted
-        /// from Exaltation
+        /// Displays a message about the charm being glorified. Code extracted from Exaltation
         /// </summary>
         /// <param name="gloryText"></param>
         /// <returns></returns>
@@ -264,7 +185,7 @@ namespace ExaltationExpanded
             messageObject.CrossFadeAlpha(1f, 0f, false);
 
             // Use the flash animation, shake effect and sound effect associated with charm glorification
-            SpriteFlash flash = SharedData.GetField<HeroController, SpriteFlash>(HeroController.instance, "spriteFlash");
+            SpriteFlash flash = ClassIntegrations.GetField<HeroController, SpriteFlash>(HeroController.instance, "spriteFlash");
             flash.flash(Color.white, 1.75f, 0.25f, 1f, 0.5f);
             ReflectionHelper.GetField<HeroController, AudioSource>(HeroController.instance, "audioSource")
                 .PlayOneShot(LoadAssets.GlorifySound, 1f);
@@ -278,8 +199,7 @@ namespace ExaltationExpanded
 
         #region Exalted Data
         /// <summary>
-        /// This event gets a charm's sprite, so this is the best time to 
-        /// update an exalted charm's sprite
+        /// This event gets a charm's sprite, so this is the best time to update an exalted charm's sprite
         /// </summary>
         /// <param name="orig"></param>
         /// <param name="self"></param>
@@ -298,7 +218,7 @@ namespace ExaltationExpanded
                 if (IsUpgraded(key))
                 {
                     //SharedData.Log($"Exaltation {key} is upgraded");
-                    return sprites[key];
+                    return SharedData.sprites[key];
                 }
             }
 

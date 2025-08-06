@@ -62,7 +62,7 @@ namespace ExaltationExpanded
             // Balance patches for Exaltation
             Menu balanceMenu = new Menu(subMenuNames[0], new Element[]
             {
-                new HorizontalOption("Balance",
+                new HorizontalOption("Power",
                                         "Power balance for Exaltation",
                                         MenuValues(),
                                         value => SharedData.globalSettings.allowBalancePatch = Convert.ToBoolean(value),
@@ -99,6 +99,11 @@ namespace ExaltationExpanded
                                         MenuValues(),
                                         value => SharedData.globalSettings.allowPaleCourt = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowPaleCourt)),
+                //new HorizontalOption("Charm Changer",
+                //                        "Uses Charm Changer settings for various properties",
+                //                        MenuValues(),
+                //                        value => SharedData.globalSettings.allowCharmChanger = Convert.ToBoolean(value),
+                //                        () => Convert.ToInt32(SharedData.globalSettings.allowCharmChanger)),
             });
             subMenus.Add(subMenuNames[2], otherModsMenu.GetMenuScreen(menuScreen));
         }

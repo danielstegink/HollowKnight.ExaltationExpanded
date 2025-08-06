@@ -1,4 +1,5 @@
-﻿using Modding;
+﻿using DanielSteginkUtils.Utilities;
+using System;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -7,93 +8,49 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class CompleteMask : Exaltation
     {
-        /// <summary>
-        /// Tracks the state of the charm: 0 means not applied, 1 means applied, 2 means broken
-        /// </summary>
-        private bool broken = false;
-
-        public override string Name => "Complete Mask";
-        public override string Description => "An expertly carved mask, like so many others worn throughout Hallownest.\n\n" +
-                                                "Increases the health of the bearer, allowing them to take more damage.";
-        public override string ID => "23_G";
+        public override string Name { get; set; } = "Complete Mask";
+        public override string Description { get; set; } = "An expertly carved mask, like so many others worn throughout Hallownest.\n\n" +
+                                                            "Increases the health of the bearer, allowing them to take more damage.";
+        public override string ID { get; set; } = "23_G";
 
         public override int IntID => 23;
 
-        public override string GodText => "god of nothingness";
+        public override string GodText { get; set; } = "god of nothingness";
 
         public override bool CanUpgrade()
         {
             return PlayerData.instance.bossDoorStateTier4.boundShell;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-            On.PlayerData.UpdateBlueHealth += ResetMask;
-            ModHooks.TakeHealthHook += BreakMask;
-            On.HeroController.AddHealth += HealMask; 
+            base.Equip();
+            //On.HeroController.CharmUpdate += IncreaseHealth;
+            On.HeroController.MaxHealth += IncreaseHealth;
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
-            On.PlayerData.UpdateBlueHealth -= ResetMask;
-            ModHooks.TakeHealthHook -= BreakMask;
-            On.HeroController.AddHealth -= HealMask;
+            base.Unequip();
+            //On.HeroController.CharmUpdate -= IncreaseHealth;
+            On.HeroController.MaxHealth -= IncreaseHealth;
         }
 
-        /// <summary>
-        /// Complete Mask gives you a single blue mask
-        /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        private void ResetMask(On.PlayerData.orig_UpdateBlueHealth orig, PlayerData self)
+        private void IncreaseHealth(On.HeroController.orig_MaxHealth orig, HeroController self)
         {
+            PlayerData.instance.maxHealth += GetBonusHealth();
             orig(self);
-            if (PlayerData.instance.equippedCharm_23)
-            {
-                broken = false;
-                self.healthBlue++;
-            }
         }
 
         /// <summary>
-        /// If the player takes damage, the mask becomes broken
+        /// Gets how much to increase our max health by
         /// </summary>
-        /// <param name="damage"></param>
         /// <returns></returns>
-        private int BreakMask(int damage)
+        private int GetBonusHealth()
         {
-            if (PlayerData.instance.equippedCharm_23 && 
-                damage > 0)
-            {
-                broken = true;
-            }
-
-            return damage;
-        }
-
-        /// <summary>
-        /// If the player heals past their max health, the mask is repaired and you 
-        /// get the blue mask back. Doesn't work if Joni's Blessing is equipped
-        /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        /// <param name="amount"></param>
-        private void HealMask(On.HeroController.orig_AddHealth orig, HeroController self, int amount)
-        {
-            bool healMask = PlayerData.instance.equippedCharm_23 &&
-                            broken &&
-                            !PlayerData.instance.equippedCharm_27 &&
-                            PlayerData.instance.health + amount > PlayerData.instance.maxHealth;
-
-            orig(self, amount);
-
-            if (healMask)
-            {
-                broken = false;
-                EventRegister.SendEvent("ADD BLUE HEALTH");
-            }
+            // Per my Utils library, 1 Mask is worth 2 notches
+            // So for 2 notches we get 1 additional mask
+            return Math.Max(1, (int)(2 / NotchCosts.NotchesPerMask()));
         }
     }
 }

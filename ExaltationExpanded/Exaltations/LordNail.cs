@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using ExaltationExpanded.Helpers;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -7,68 +7,38 @@ namespace ExaltationExpanded.Exaltations
     /// </summary>
     public class LordNail : Exaltation
     {
-        public override string Name => "Lord Nail";
-        public override string Description => "The preferred weapon of those who rule the Mantis tribe.\n\n" +
+        public override string Name { get; set; } = "Lord Nail";
+        public override string Description { get; set; } = "The preferred weapon of those who rule the Mantis tribe.\n\n" +
                                                 "Greatly increases the range of the bearer's nail, allowing them to strike foes from further away.";
-        public override string ID => "18";
+        public override string ID { get; set; } = "18";
 
-        public override string GodText => "gods of combat";
+        public override string GodText { get; set; } = "gods of combat";
 
         public override bool CanUpgrade()
         {
             return PlayerData.instance.statueStateMantisLords.completedTier2 || PlayerData.instance.bossDoorStateTier2.boundNail;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-            On.NailSlash.StartSlash += IncreaseNailLength;
+            base.Equip();
+
+            helper = new LordNailHelper();
+            helper.Start();
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
-            On.NailSlash.StartSlash -= IncreaseNailLength;
-        }
-
-        /// <summary>
-        /// Lord Nail increases the length of nail slashes by an additional 8.7%.
-        /// The change is multiplicative, so 15% times an extra 8.7% becomes 25%, 
-        /// and adding MOP changes the total bonus from 40% to 52%
-        /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        private void IncreaseNailLength(On.NailSlash.orig_StartSlash orig, NailSlash self)
-        {
-            //SharedData.Log("Checking nail length");
-
-            // Get the default scale
-            Vector3 startingScale = self.scale;
-            //SharedData.Log($"Starting scale: {ToString(startingScale)}");
-
-            // If Longnail is equipped, increase the scale by 8.7%
-            if (PlayerData.instance.equippedCharm_18)
+            base.Unequip();
+            if (helper != null)
             {
-                Vector3 newScale = new Vector3(startingScale.x * 1.087f, startingScale.y * 1.087f);
-                self.scale = newScale;
-                //SharedData.Log($"New scale: {ToString(newScale)}");
+                helper.Stop();
             }
-
-            // Perform the nail slash
-            orig(self);
-            //SharedData.Log($"Final scale: {ToString(self.transform.localScale)}");
-
-            self.scale = startingScale;
         }
 
         /// <summary>
-        /// String representation of the scale as (x,y)
+        /// Utils helper
         /// </summary>
-        /// <param name="scale"></param>
-        /// <returns></returns>
-        private string ToString(Vector3 scale)
-        {
-            return $"({scale.x},{scale.y})";
-        }
+        private LordNailHelper helper;
     }
 }

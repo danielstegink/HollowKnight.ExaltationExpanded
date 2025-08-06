@@ -1,4 +1,5 @@
-﻿using ExaltationExpanded.Helpers;
+﻿using DanielSteginkUtils.Utilities;
+using ExaltationExpanded.Helpers;
 using Modding;
 using SFCore;
 using System;
@@ -25,7 +26,6 @@ namespace ExaltationExpanded.Patches
             charmId = CharmHelper.AddSprites(new Sprite[] { lordSprite })[0];
 
             // Apply charm effects
-            SharedData.Log("Applying hooks.");
             ModHooks.BeforeSavegameSaveHook += BeforeSave;
             ModHooks.LanguageGetHook += GetCharmText;
             ModHooks.GetPlayerBoolHook += GetCharmBools;
@@ -48,7 +48,7 @@ namespace ExaltationExpanded.Patches
             {
                 // Default Lordsoul to false so Void Heart stays the default, and disable
                 //      SwitchSoul so it never happens
-                SharedData.SetField(SharedData.exaltationMod, "SwitchSoul", false);
+                ClassIntegrations.SetField(SharedData.exaltationMod, "SwitchSoul", false);
                 SharedData.exaltationMod.Settings.Lordsoul = false;
             }
         }

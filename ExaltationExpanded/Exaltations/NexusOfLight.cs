@@ -1,49 +1,58 @@
-﻿namespace ExaltationExpanded.Exaltations
+﻿using DanielSteginkUtils.Helpers.Attributes;
+using DanielSteginkUtils.Utilities;
+
+namespace ExaltationExpanded.Exaltations
 {
     /// <summary>
     /// This exaltation replaces Deep Focus
     /// </summary>
     public class NexusOfLight : Exaltation
     {
-        public override string Name => "Nexus Of Light";
-        public override string Description => "This broken mask attracts a strange, empowering light.\n\n" +
-                                                "The bearer will focus SOUL at a slower rate, but the healing effect will triple.";
-        public override string ID => "34";
+        public override string Name { get; set; } = "Nexus Of Light";
+        public override string Description { get; set; } = "This broken mask attracts a strange, empowering light.\n\n" +
+                                                            "The bearer will focus SOUL at a slower rate, but the healing effect be greater.";
+        public override string ID { get; set; } = "34";
 
-        public override string GodText => "empty god";
+        public override string GodText { get; set; } = "empty god";
 
         public override bool CanUpgrade()
         {
-            return PlayerData.instance.statueStateBrokenVessel.completedTier2 || PlayerData.instance.bossDoorStateTier2.boundShell;
+            return PlayerData.instance.statueStateBrokenVessel.completedTier2 || 
+                    PlayerData.instance.bossDoorStateTier2.boundShell;
         }
 
-        public override void Upgrade()
+        public override void Equip()
         {
-            base.Upgrade();
-            On.HeroController.AddHealth += BuffHealAmount;
+            base.Equip();
+
+            healHelper = new HealHelper(GetHealingChance());
+            healHelper.Start();
         }
 
-        public override void Reset()
+        public override void Unequip()
         {
-            base.Reset();
-            On.HeroController.AddHealth -= BuffHealAmount;
+            base.Unequip();
+
+            if (healHelper != null)
+            {
+                healHelper.Stop();
+            }
         }
 
         /// <summary>
-        /// Nexus of Light increases the healing done while Deep Focus is equipped by 50%
+        /// Utils helper
         /// </summary>
-        /// <param name="orig"></param>
-        /// <param name="self"></param>
-        /// <param name="amount"></param>
-        private void BuffHealAmount(On.HeroController.orig_AddHealth orig, HeroController self, int amount)
-        {
-            if (PlayerData.instance.equippedCharm_34)
-            {
-                amount += amount / 2;
-                //SharedData.Log($"Deep focus healing: {amount}");
-            }
+        private HealHelper healHelper;
 
-            orig(self, amount);
+        /// <summary>
+        /// Nexus of Light increases healing received
+        /// </summary>
+        /// <returns></returns>
+        private int GetHealingChance()
+        {
+            // Per my Utils library, healing 1 extra mask is worth 8 notches
+            // So for 2 notches, NOL should have a 25% chance of healing an extra mask
+            return (int)(2 * 100 / NotchCosts.NotchesPerHeal());
         }
     }
 }
