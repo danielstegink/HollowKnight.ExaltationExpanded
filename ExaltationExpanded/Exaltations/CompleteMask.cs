@@ -25,17 +25,20 @@ namespace ExaltationExpanded.Exaltations
         public override void Equip()
         {
             base.Equip();
-            //On.HeroController.CharmUpdate += IncreaseHealth;
             On.HeroController.MaxHealth += IncreaseHealth;
         }
 
         public override void Unequip()
         {
             base.Unequip();
-            //On.HeroController.CharmUpdate -= IncreaseHealth;
             On.HeroController.MaxHealth -= IncreaseHealth;
         }
 
+        /// <summary>
+        /// Complete Mask increases the player's max health
+        /// </summary>
+        /// <param name="orig"></param>
+        /// <param name="self"></param>
         private void IncreaseHealth(On.HeroController.orig_MaxHealth orig, HeroController self)
         {
             PlayerData.instance.maxHealth += GetBonusHealth();
