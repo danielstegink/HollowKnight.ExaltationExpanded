@@ -5,16 +5,22 @@ This mod adds exaltations to the remaining charms as well as a handful of balanc
 
 Details on each exaltation can be found in the SPOILERS file and info on the various patches can be found in the PATCH SPOILERS file.
 
-The patch notes can be found in the UPDATE HISTORY file.
+NOTE - Although not an explicit dependency, this mod's UI adjusts the character's HP, so installing SFGrenade's MoreMasks mod is recommended.
 
 ## Thanks
 Thank you to Xhuis, Théodore and everyone else who made Exaltation; it is an incredibly creative addition to the game and I would have never thought to create it.
+
+Thank you ilcheese2 for their CarefreeGrimm mod, which made creating the Knightmare Lullaby patch so much easier.
 
 Huge shout out to the Hollow Knight modding community as a whole. This was an especially intensive project and I was lost on multiple occasions without their help.
 
 Thank you to Volt and BenjaLP211 for help with testing and feedback.
 
 ## Patch Notes
+1.3.0.0
+- Bug fix where Complete Mask triggered twice
+- New patch: Knightmare Lullaby unlocks Grimmchild and Carefree Melody as separate charms
+
 1.2.1.0
 - Modified to use latest version of DanielSteginkUtils
 

@@ -11,10 +11,6 @@ namespace ExaltationExpanded
     /// </summary>
     public static class SharedData
     {
-        private static ExaltationExpanded _logger = new ExaltationExpanded();
-
-        public static string modName = "ExaltationExpanded";
-
         /// <summary>
         /// Parent mod Exaltation
         /// </summary>
@@ -51,12 +47,6 @@ namespace ExaltationExpanded
         };
 
         /// <summary>
-        /// Stores the ID of the second Grimmchild/Carefree Melody
-        /// charm, if it exists
-        /// </summary>
-        public static int carefreeGrimmId { get; set; } = -1;
-
-        /// <summary>
         /// Cache sprites for future reference
         /// </summary>
         public static Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
@@ -72,16 +62,9 @@ namespace ExaltationExpanded
 
         public static PaleCourt paleCourt { get; set; } = new PaleCourt();
 
+        public static KnightmareLullaby knightmareLullaby { get; set; } = new KnightmareLullaby();
+
         //public static CharmChanger charmChanger { get; set; } = new CharmChanger();
         #endregion
-
-        /// <summary>
-        /// Logs message to the shared mod log at AppData\LocalLow\Team Cherry\Hollow Knight\ModLog.txt
-        /// </summary>
-        /// <param name="message"></param>
-        public static void Log(string message)
-        {
-            _logger.Log(message);
-        }
     }
 }

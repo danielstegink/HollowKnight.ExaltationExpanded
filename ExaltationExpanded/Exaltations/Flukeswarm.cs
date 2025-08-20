@@ -25,7 +25,7 @@ namespace ExaltationExpanded.Exaltations
             flukeHelper = new FlukeHelper(GetModifier());
             flukeHelper.Start();
 
-            dungFlukeHelper = new DungFlukeHelper(SharedData.modName, Name, 1 / GetModifier());
+            dungFlukeHelper = new DungFlukeHelper(ExaltationExpanded.Instance.Name, Name, 1 / GetModifier());
             dungFlukeHelper.Start();
         }
 

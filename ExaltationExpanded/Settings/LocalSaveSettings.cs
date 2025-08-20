@@ -15,8 +15,13 @@ namespace ExaltationExpanded.Settings
         public bool nsgEquipped = false;
 
         /// <summary>
-        /// Stores if Lordsoul has been equipped through Void Soul
+        /// Stores if Lordsoul is equipped through Void Soul
         /// </summary>
         public bool voidSoulEquipped = false;
+
+        /// <summary>
+        /// Stores if the second CarefreeGrimm charm is equipped
+        /// </summary>
+        public bool knightmareLullabyEquipped = false;
     }
 }

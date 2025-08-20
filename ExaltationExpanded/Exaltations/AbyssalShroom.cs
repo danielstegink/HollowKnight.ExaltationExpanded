@@ -25,10 +25,10 @@ namespace ExaltationExpanded.Exaltations
         public override void Equip()
         {
             base.Equip();
-            sizeHelper = new SporeSizeHelper(SharedData.modName, Name, GetSizeModifier());
+            sizeHelper = new SporeSizeHelper(ExaltationExpanded.Instance.Name, Name, GetSizeModifier());
             sizeHelper.Start();
 
-            damageHelper = new SporeDamageHelper(SharedData.modName, Name, 1 / GetDamageModifier());
+            damageHelper = new SporeDamageHelper(ExaltationExpanded.Instance.Name, Name, 1 / GetDamageModifier());
             damageHelper.Start();
         }
 

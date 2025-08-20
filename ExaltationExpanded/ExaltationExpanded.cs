@@ -15,7 +15,9 @@ namespace ExaltationExpanded
 {
     public class ExaltationExpanded : Mod, ILocalSettings<LocalSaveSettings>, IGlobalSettings<GlobalSettings>, ICustomMenuMod
     {
-        public override string GetVersion() => "1.2.1.0";
+        public static ExaltationExpanded Instance { get; private set; }
+
+        public override string GetVersion() => "1.3.0.0";
 
         public override int LoadPriority() => 2;
 
@@ -32,7 +34,6 @@ namespace ExaltationExpanded
 
         public void OnLoadLocal(LocalSaveSettings s)
         {
-            //SharedData.Log("Loading save settings");
             SharedData.saveSettings = s;
         }
 
@@ -49,7 +50,8 @@ namespace ExaltationExpanded
 
         public override void Initialize(Dictionary<string, Dictionary<string, GameObject>> preloadedObjects)
         {
-            SharedData.Log("Initializing");
+            Log("Initializing");
+            Instance = this;
 
             // This mod is meant to augment Exaltation
             SharedData.exaltationMod = (Exaltation.Exaltation)ModHooks.GetMod("Exaltation");
@@ -62,26 +64,23 @@ namespace ExaltationExpanded
             SharedData.paleCourt.paleCourtMod = ModHooks.GetMod("Pale Court");
             //SharedData.charmChanger.charmChangerMod = ModHooks.GetMod("Pale Court");
 
-            // Check if a mod is installed that added Grimmchild or Carefree Melody as an extra charm
-            SharedData.carefreeGrimmId = GetModCharmHelper.GetCharmId(new string[] { "Carefree Melody", "Grimmchild" });
-            //SharedData.Log($"CarefreeGrimm ID: {SharedData.carefreeGrimmId}");
-
-            SharedData.Log("Loading sprites");
+            Log("Loading sprites");
             LoadSprites();
 
-            SharedData.Log("Applying hooks");
+            Log("Applying patches");
+            SharedData.nailsageGlory.ApplyHooks();
+            SharedData.costPatch.ApplyHooks();
+            SharedData.powerPatch.ApplyHooks();
+            SharedData.voidSoul.ApplyHooks();
+            SharedData.knightmareLullaby.ApplyHooks();
+
+            Log("Applying hooks");
             ModHooks.SavegameLoadHook += NewGame;
             ModHooks.SavegameSaveHook += SaveGame;
             On.CharmIconList.GetSprite += GetSprite;
             ModHooks.LanguageGetHook += LanguageGet;
 
-            SharedData.Log("Applying patches");
-            SharedData.nailsageGlory.ApplyHooks();
-            SharedData.costPatch.ApplyHooks();
-            SharedData.powerPatch.ApplyHooks();
-            SharedData.voidSoul.ApplyHooks();
-
-            SharedData.Log("Initialized");
+            Log("Initialized");
         }
 
         /// <summary>
@@ -144,7 +143,7 @@ namespace ExaltationExpanded
                     SharedData.saveSettings.Exalted.Add(key);
                     exaltation.Upgrade();
                     gloryText = $"Charms glorified by the {exaltation.GodText}";
-                    SharedData.Log($"Exaltation {key} added to save");
+                    //Log($"Exaltation {key} added to save");
                 }
             }
 

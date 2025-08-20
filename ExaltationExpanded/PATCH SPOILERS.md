@@ -11,6 +11,8 @@ Nailsage's Glory allows you to unlock both Nailsage's Tenacity and Nailsage's Pa
 
 Void Soul lets you unlock Lordsoul as a separate charm by defeating Pure Vessel on radiant difficulty.
 
+Knightmare Lullaby lets you unlock Grimmchild and Carefree Melody as separate charms by defeating Nightmare King Grimm on radiant difficulty.
+
 ## Mod Integrations
 Pale Court compatibility patch currently only makes it so that unlocking King's Honour and glorifying Defender's Crest creates a 
 more powerful version called King's Majesty.

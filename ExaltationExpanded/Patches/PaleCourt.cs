@@ -34,7 +34,7 @@ namespace ExaltationExpanded.Patches
             if (upgradeCrest &&
                 !(dungDefender is KingsMajesty))
             {
-                SharedData.Log("Replacing Royal Crest");
+                ExaltationExpanded.Instance.Log("Replacing Royal Crest");
                 dungDefender.Reset();
                 SharedData.exaltations["10"] = new KingsMajesty();
                 string id = SharedData.exaltations["10"].ID + "_P";
@@ -44,7 +44,7 @@ namespace ExaltationExpanded.Patches
             else if (!upgradeCrest &&
                      dungDefender is KingsMajesty) // Make sure to reset to Royal Crest if King's Honour hasn't been unlocked
             {
-                SharedData.Log("Replacing King's Majesty");
+                ExaltationExpanded.Instance.Log("Replacing King's Majesty");
                 dungDefender.Reset();
                 SharedData.exaltations["10"] = new RoyalCrest();
                 Sprite sprite = SpriteHelper.GetLocalSprite(SharedData.exaltations["10"].ID);

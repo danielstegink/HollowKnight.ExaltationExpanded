@@ -28,7 +28,7 @@ namespace ExaltationExpanded.Exaltations
             }
             else // Otherwise, check if there is a second charm ID
             {
-                return SharedData.carefreeGrimmId.ToString();
+                return SharedData.knightmareLullaby.charmId.ToString();
             }
         }
 

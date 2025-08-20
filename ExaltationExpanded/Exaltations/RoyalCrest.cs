@@ -22,10 +22,10 @@ namespace ExaltationExpanded.Exaltations
         {
             base.Equip();
 
-            dungSizeHelper = new DungSizeHelper(SharedData.modName, ID, GetSizeModifier());
+            dungSizeHelper = new DungSizeHelper(ExaltationExpanded.Instance.Name, ID, GetSizeModifier());
             dungSizeHelper.Start();
 
-            dungDamageHelper = new DungDamageHelper(SharedData.modName, ID, GetDamageModifier());
+            dungDamageHelper = new DungDamageHelper(ExaltationExpanded.Instance.Name, ID, GetDamageModifier());
             dungDamageHelper.Start();
         }
 

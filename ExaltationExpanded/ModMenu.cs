@@ -88,6 +88,11 @@ namespace ExaltationExpanded
                                         MenuValues(),
                                         value => SharedData.globalSettings.allowVoidSoul = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowVoidSoul)),
+                new HorizontalOption("Knightmare Lullaby",
+                                        "Possible to unlock Grimmchild and Carefree Melody",
+                                        MenuValues(),
+                                        value => SharedData.globalSettings.allowKnightmareLullaby = Convert.ToBoolean(value),
+                                        () => Convert.ToInt32(SharedData.globalSettings.allowKnightmareLullaby)),
             });
             subMenus.Add(subMenuNames[1], swapMenu.GetMenuScreen(menuScreen));
 

@@ -12,6 +12,8 @@
 
         public bool allowVoidSoul = true;
 
+        public bool allowKnightmareLullaby = true;
+
         public bool allowCharmChanger = true;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using DanielSteginkUtils.Utilities;
 using System;
+using System.Collections;
 
 namespace ExaltationExpanded.Exaltations
 {
@@ -25,24 +26,32 @@ namespace ExaltationExpanded.Exaltations
         public override void Equip()
         {
             base.Equip();
-            On.HeroController.MaxHealth += IncreaseHealth;
+            On.HeroController.CharmUpdate += IncreaseHealth;
         }
 
         public override void Unequip()
         {
             base.Unequip();
-            On.HeroController.MaxHealth -= IncreaseHealth;
+            On.HeroController.CharmUpdate -= IncreaseHealth;
         }
 
         /// <summary>
-        /// Complete Mask increases the player's max health
+        /// Complete Mask increases the player's max health.
+        /// 
+        /// There are a lot of factors that affect max health, so the most bug-free approach is 
+        /// to increment the health base before everything else changes the max health.
         /// </summary>
         /// <param name="orig"></param>
         /// <param name="self"></param>
-        private void IncreaseHealth(On.HeroController.orig_MaxHealth orig, HeroController self)
+        /// <exception cref="NotImplementedException"></exception>
+        private void IncreaseHealth(On.HeroController.orig_CharmUpdate orig, HeroController self)
         {
-            PlayerData.instance.maxHealth += GetBonusHealth();
+            PlayerData.instance.IntAdd("maxHealthBase", GetBonusHealth());
             orig(self);
+
+            // Make sure to reset the base afterwards, so this doesn't stack
+            PlayerData.instance.IntAdd("maxHealthBase", -GetBonusHealth());
+            //SharedData.Log($"Complete Mask - Max health: {PlayerData.instance.maxHealth}");
         }
 
         /// <summary>
