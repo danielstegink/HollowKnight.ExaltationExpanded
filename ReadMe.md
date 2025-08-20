@@ -15,6 +15,9 @@ Huge shout out to the Hollow Knight modding community as a whole. This was an es
 Thank you to Volt and BenjaLP211 for help with testing and feedback.
 
 ## Patch Notes
+1.2.1.0
+- Modified to use latest version of DanielSteginkUtils
+
 1.2.0.0
 -	Integrated with DanielSteginkUtils
 -	Complete Mask gives extra masks instead of a healable Lifeblood Mask

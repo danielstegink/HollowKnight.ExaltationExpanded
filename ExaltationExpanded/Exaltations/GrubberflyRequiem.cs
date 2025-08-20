@@ -1,4 +1,4 @@
-﻿using DanielSteginkUtils.Helpers.Charms;
+﻿using DanielSteginkUtils.Helpers.Charms.Elegy;
 using DanielSteginkUtils.Utilities;
 
 namespace ExaltationExpanded.Exaltations
