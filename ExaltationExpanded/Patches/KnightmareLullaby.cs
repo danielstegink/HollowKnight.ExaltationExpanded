@@ -27,7 +27,7 @@ namespace ExaltationExpanded.Patches
             }
 
             // Add the charm to the charm list and get its new ID number
-            Sprite grimmSprite = CharmIconList.Instance.spriteList[40];
+            Sprite grimmSprite = SpriteHelper.GetLocalSprite("Grimmchild"); // Placeholder, not actually used
             charmId = CharmHelper.AddSprites(new Sprite[] { grimmSprite })[0];
 
             // Apply charm effects

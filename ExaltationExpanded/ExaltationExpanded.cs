@@ -1,5 +1,4 @@
-﻿using DanielSteginkUtils.Helpers.Charms;
-using DanielSteginkUtils.Utilities;
+﻿using DanielSteginkUtils.Utilities;
 using Exaltation;
 using ExaltationExpanded.Helpers;
 using ExaltationExpanded.Settings;
@@ -17,7 +16,7 @@ namespace ExaltationExpanded
     {
         public static ExaltationExpanded Instance { get; private set; }
 
-        public override string GetVersion() => "1.3.0.0";
+        public override string GetVersion() => "1.3.1.0";
 
         public override int LoadPriority() => 2;
 

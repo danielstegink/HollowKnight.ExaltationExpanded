@@ -17,6 +17,9 @@ Huge shout out to the Hollow Knight modding community as a whole. This was an es
 Thank you to Volt and BenjaLP211 for help with testing and feedback.
 
 ## Patch Notes
+1.3.1.0
+- Bug fix for Knightmare Lullaby
+
 1.3.0.0
 - Bug fix where Complete Mask triggered twice
 - New patch: Knightmare Lullaby unlocks Grimmchild and Carefree Melody as separate charms
