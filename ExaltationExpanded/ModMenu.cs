@@ -1,4 +1,5 @@
 ﻿using Satchel.BetterMenus;
+using Satchel.BetterMenus.Attributes;
 using System;
 using System.Collections.Generic;
 
@@ -64,12 +65,12 @@ namespace ExaltationExpanded
             {
                 new HorizontalOption("Power",
                                         "Power balance for Exaltation",
-                                        MenuValues(),
+                                        BoolValues(),
                                         value => SharedData.globalSettings.allowBalancePatch = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowBalancePatch)),
                 new HorizontalOption("Cost",
                                         "Charm cost fix for Exaltation",
-                                        MenuValues(),
+                                        BoolValues(),
                                         value => SharedData.globalSettings.allowCostPatch = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowCostPatch)),
             });
@@ -80,17 +81,17 @@ namespace ExaltationExpanded
             {
                 new HorizontalOption("Nailsage's Glory",
                                         "Possible to unlock both Nailsage charms",
-                                        MenuValues(),
+                                        BoolValues(),
                                         value => SharedData.globalSettings.allowNailsageGlory = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowNailsageGlory)),
                 new HorizontalOption("Void Soul",
                                         "Possible to unlock Lordsoul and Void Heart",
-                                        MenuValues(),
+                                        BoolValues(),
                                         value => SharedData.globalSettings.allowVoidSoul = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowVoidSoul)),
                 new HorizontalOption("Knightmare Lullaby",
                                         "Possible to unlock Grimmchild and Carefree Melody",
-                                        MenuValues(),
+                                        BoolValues(),
                                         value => SharedData.globalSettings.allowKnightmareLullaby = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowKnightmareLullaby)),
             });
@@ -101,21 +102,39 @@ namespace ExaltationExpanded
             {
                 new HorizontalOption("Pale Court",
                                         "Add exalted version of King's Honour",
-                                        MenuValues(),
+                                        BoolValues(),
                                         value => SharedData.globalSettings.allowPaleCourt = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowPaleCourt)),
-                //new HorizontalOption("Charm Changer",
-                //                        "Uses Charm Changer settings for various properties",
-                //                        MenuValues(),
-                //                        value => SharedData.globalSettings.allowCharmChanger = Convert.ToBoolean(value),
-                //                        () => Convert.ToInt32(SharedData.globalSettings.allowCharmChanger)),
+                new HorizontalOption("Charm Changer",
+                                        "Uses Charm Changer settings for various properties",
+                                        BoolValues(),
+                                        value => SharedData.globalSettings.allowCharmChanger = Convert.ToBoolean(value),
+                                        () => Convert.ToInt32(SharedData.globalSettings.allowCharmChanger)),
+                new HorizontalOption("Charm Changer - Kingsoul Cost",
+                                        "Overrides Charm Changer's Kingsoul cost",
+                                        CostValues(),
+                                        value => SharedData.globalSettings.charmChangerKingsoulCost = value,
+                                        () => SharedData.globalSettings.charmChangerKingsoulCost),
             });
             subMenus.Add(subMenuNames[2], otherModsMenu.GetMenuScreen(menuScreen));
         }
 
-        private static string[] MenuValues()
+        /// <summary>
+        /// String values for boolean options
+        /// </summary>
+        /// <returns></returns>
+        private static string[] BoolValues()
         {
             return new string[] { "OFF", "ON" };
+        }
+
+        /// <summary>
+        /// String values for int options
+        /// </summary>
+        /// <returns></returns>
+        private static string[] CostValues()
+        {
+            return new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
         }
     }
 }

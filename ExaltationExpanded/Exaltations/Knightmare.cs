@@ -69,7 +69,8 @@ namespace ExaltationExpanded.Exaltations
         {
             // Grimmchild costs 2 notches
             // So for 2 notches we can increase its damage rate by 100%
-            return 2f;
+            float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt($"charmCost_{IntID}"), 0.5f);
+            return 1 + 2f / cost;
         }
     }
 }

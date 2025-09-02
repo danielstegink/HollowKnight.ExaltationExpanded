@@ -61,7 +61,8 @@ namespace ExaltationExpanded.Exaltations
         {
             // Flukenest costs 3 notches
             // So for 2 notches, we can increase its damage by 67%
-            return 1f + 2f / 3f;
+            float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt("charmCost_11"), 0.5f);
+            return 1f + 2f / cost;
         }
     }
 }

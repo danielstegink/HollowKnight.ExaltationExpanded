@@ -133,7 +133,15 @@ namespace ExaltationExpanded.Patches
         {
             if (key.Equals($"charmCost_{charmId}"))
             {
-                return 3; // todo - charm changer patch - kingsoul minus 2 (min 0)
+                if (SharedData.charmChanger.IsEnabled())
+                {
+                    // Charm Changer sets Kingoul's cost to 0 since it and Void Heart share the setting
+                    // So I've added an extra setting to override the base cost in Charm Changer
+                    int defaultCost = SharedData.globalSettings.charmChangerKingsoulCost;
+                    return Math.Max(0, defaultCost - 2);
+                }
+
+                return 3;
             }
 
             return defaultValue;
@@ -168,12 +176,19 @@ namespace ExaltationExpanded.Patches
         /// <returns></returns>
         private IEnumerator RunLordsoul()
         {
-            // Triggered via mod initialization, so this can just run forever
+            // Kingsoul gives 4 SOUL every 2 seconds
+            int soulGain = 4;
+            float waitTime = 2f;
+            if (SharedData.charmChanger.IsEnabled())
+            {
+                soulGain = SharedData.charmChanger.GetField<int>("kingsoulSoulGain");
+                waitTime = SharedData.charmChanger.GetField<float>("kingsoulSoulTime");
+            }
+
             while (SharedData.saveSettings.voidSoulEquipped)
             {
-                // Kingsoul gives 4 SOUL every 2 seconds
-                HeroController.instance.AddMPCharge(4);
-                yield return new WaitForSeconds(2f);
+                HeroController.instance.AddMPCharge(soulGain);
+                yield return new WaitForSeconds(waitTime);
             }
         }
     }

@@ -55,13 +55,13 @@ namespace ExaltationExpanded.Exaltations
         private DungDamageHelper dungDamageHelper;
 
         /// <summary>
-        /// If we spend 1 notch to increase the cloud size, we want to hit 
-        /// 100% more enemies, so a 50% boost should be sufficent
+        /// If we spend 1 notch to increase the cloud size, we want to hit 100% more enemies, so a 50% boost should be sufficent
         /// </summary>
         /// <returns></returns>
         private float GetSizeModifier()
         {
-            return 1.5f;
+            float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt("charmCost_10"), 0.5f);
+            return 1 + 0.5f / cost;
         }
 
         /// <summary>
@@ -70,7 +70,8 @@ namespace ExaltationExpanded.Exaltations
         /// <returns></returns>
         private float GetDamageModifier()
         {
-            return 2f;
+            float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt("charmCost_10"), 0.5f);
+            return 1 + 1f / cost;
         }
     }
 }

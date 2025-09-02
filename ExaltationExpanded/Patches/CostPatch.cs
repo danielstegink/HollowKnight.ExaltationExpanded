@@ -1,4 +1,5 @@
 ﻿ using Modding;
+using System;
 
 namespace ExaltationExpanded.Patches
 {
@@ -26,25 +27,25 @@ namespace ExaltationExpanded.Patches
                 if (name.Equals("charmCost_2") &&
                     SharedData.exaltationMod.Settings.WaywardCompassGlorified)
                 {
-                    return 0;
+                    return Math.Max(0, SharedData.charmChanger.GetCharmNotches(2, orig) - 1);
                 }
                 // Steady Body
                 else if (name.Equals("charmCost_14") &&
                          SharedData.exaltationMod.Settings.SteadyBodyGlorified)
                 {
-                    return 0;
+                    return Math.Max(0, SharedData.charmChanger.GetCharmNotches(14, orig) - 1);
                 }
                 // Hiveblood
                 else if (name.Equals("charmCost_29") &&
                          SharedData.exaltationMod.Settings.HivebloodGlorified)
                 {
-                    return 3; // todo - reduces cost by 1. should integrate w charm changer later
+                    return Math.Max(0, SharedData.charmChanger.GetCharmNotches(29, orig) - 1);
                 }
                 // Dashmaster
                 else if (name.Equals("charmCost_31") &&
                          SharedData.exaltationMod.Settings.DashmasterGlorified)
                 {
-                    return 1; // todo - see hiveblood
+                    return Math.Max(0, SharedData.charmChanger.GetCharmNotches(31, orig) - 1);
                 }
             }
 

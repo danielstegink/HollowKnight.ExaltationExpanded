@@ -41,10 +41,44 @@ namespace ExaltationExpanded.Exaltations
             if (gameObject.name.Contains("Weaverling"))
             {
                 // Weaversong is worth 2 notches, so we can spend our 2 notches to double the number of weaverlings
-                _ = GameObject.Instantiate(gameObject, 
-                    new Vector3(HeroController.instance.transform.GetPositionX(), 
-                    HeroController.instance.transform.GetPositionY()), 
-                    Quaternion.identity);
+                int loops = 1;
+
+                // If Charm Changer adjusts the cost, we need to plan accordingly
+                if (SharedData.charmChanger.IsEnabled())
+                {
+                    // If it costs 1, we want a 200% chance
+                    // If it still costs 2, we want a 100% chance
+                    // If it costs 3, we want a 66.7% chance
+                    float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt("charmCost_39"), 0.5f);
+                    int chance = (int)(2 * 100 / cost);
+
+                    // If we get a chance greater than 100%, we want a guarantee of spawning weaverlings, and a chance of spawning more after that
+                    loops = 0;
+                    while (chance >= 100)
+                    {
+                        loops++;
+                        chance -= 100;
+                    }
+                    //ExaltationExpanded.Instance.Log($"Beast's Call - Guaranteed loops: {loops}");
+
+                    if (chance > 0)
+                    {
+                        int random = UnityEngine.Random.Range(1, 101);
+                        //ExaltationExpanded.Instance.Log($"Beast's Call - {random} vs {100 - chance}");
+                        if (random <= 100 - chance)
+                        {
+                            loops++;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < loops; i++)
+                {
+                    _ = GameObject.Instantiate(gameObject,
+                                                new Vector3(HeroController.instance.transform.GetPositionX(),
+                                                            HeroController.instance.transform.GetPositionY()),
+                                                            Quaternion.identity);
+                }
             }
 
             return gameObject;

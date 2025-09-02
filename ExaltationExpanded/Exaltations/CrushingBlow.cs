@@ -24,7 +24,8 @@ namespace ExaltationExpanded.Exaltations
         public override void Equip()
         {
             base.Equip();
-            helper = new StaggerHelper(GetStaggerCount(), GetStaggerCount() / 2);
+            int staggerCount = GetStaggerCount();
+            helper = new StaggerHelper(staggerCount, staggerCount / 2);
             helper.Start();
         }
 

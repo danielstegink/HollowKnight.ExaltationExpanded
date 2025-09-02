@@ -58,13 +58,13 @@ namespace ExaltationExpanded
 
         public static PowerPatch powerPatch { get; set; } = new PowerPatch();
 
-        public static VoidSoul voidSoul { get; set; } = new VoidSoul();
-
         public static PaleCourt paleCourt { get; set; } = new PaleCourt();
 
         public static KnightmareLullaby knightmareLullaby { get; set; } = new KnightmareLullaby();
 
-        //public static CharmChanger charmChanger { get; set; } = new CharmChanger();
+        public static VoidSoul voidSoul { get; set; } = new VoidSoul();
+
+        public static CharmChanger charmChanger { get; set; } = new CharmChanger();
         #endregion
     }
 }

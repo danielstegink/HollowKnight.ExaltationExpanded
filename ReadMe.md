@@ -17,6 +17,15 @@ Huge shout out to the Hollow Knight modding community as a whole. This was an es
 Thank you to Volt and BenjaLP211 for help with testing and feedback.
 
 ## Patch Notes
+1.4.0.0
+- New compatibility patch with Charm Changer
+- Primal Womb's bonuses are no longer overwritten by Charm Changer
+- New charms added to Power Patch:
+	- Shaman's Relic does more damage
+	- Stagway Coin gives a greater reduction in dash cooldown
+	- Marathon Master gives a greater speed boost
+- Void Soul uses a new menu setting to calculate Lordsoul's cost
+
 1.3.1.0
 - Bug fix for Knightmare Lullaby
 

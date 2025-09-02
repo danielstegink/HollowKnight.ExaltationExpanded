@@ -47,7 +47,7 @@ namespace ExaltationExpanded.Exaltations
         public int GetBeamChance()
         {
             // Per my Utils folder, GE would be worth 12 notches if it didn't require full health
-            float totalValue = 3f * NotchCosts.FullHealthModifier();
+            float totalValue = SharedData.charmChanger.GetCharmNotches(35, PlayerData.instance.GetInt("charmCost_35"), 0.5f) * NotchCosts.FullHealthModifier();
 
             // That means for 2 notches, we can have a 1/6 chance of the beam triggering
             return (int)(2 * 100 / totalValue);

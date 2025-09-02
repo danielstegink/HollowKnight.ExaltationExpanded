@@ -31,7 +31,25 @@ namespace ExaltationExpanded.Helpers
             // We know Longnail is equipped, which means the nail's range is currently 115%
             // To increase it by 16.67%, we need to multiply so the total is 131.67%
             // 1.15 * x = 131.67, x = 1.14
-            return (1.15f + modifierIncrease) / 1.15f;
+            float modifier = GetLongNailModifier();
+            modifier = (modifier + modifierIncrease) / modifier;
+            return modifier;
+        }
+
+        /// <summary>
+        /// Gets Longnail's range modifier
+        /// </summary>
+        /// <returns></returns>
+        private float GetLongNailModifier()
+        {
+            if (SharedData.charmChanger.IsEnabled())
+            {
+                int modifier = SharedData.charmChanger.GetField<int>("longnailScale");
+                //ExaltationExpanded.Instance.Log($"Lord Nail - Range modifier {modifier}");
+                return 1f + (float)modifier / 100;
+            }
+
+            return 1.15f;
         }
     }
 }

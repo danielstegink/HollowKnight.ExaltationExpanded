@@ -48,7 +48,7 @@ namespace ExaltationExpanded.Exaltations
         private float GetModifier()
         {
             // Per my Utils, extra Geo is worth 5% per notch
-            /// So for 2 notches, it is worth 10%
+            // So for 2 notches, it is worth 10%
             return 1f + 2 * NotchCosts.GeoPerNotch();
         }
     }

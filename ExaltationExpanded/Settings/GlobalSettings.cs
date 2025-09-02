@@ -15,5 +15,7 @@
         public bool allowKnightmareLullaby = true;
 
         public bool allowCharmChanger = true;
+
+        public int charmChangerKingsoulCost = 5;
     }
 }

@@ -16,7 +16,7 @@ namespace ExaltationExpanded
     {
         public static ExaltationExpanded Instance { get; private set; }
 
-        public override string GetVersion() => "1.3.1.0";
+        public override string GetVersion() => "1.4.0.0";
 
         public override int LoadPriority() => 2;
 
@@ -61,7 +61,7 @@ namespace ExaltationExpanded
 
             // Check if external mods are installed
             SharedData.paleCourt.paleCourtMod = ModHooks.GetMod("Pale Court");
-            //SharedData.charmChanger.charmChangerMod = ModHooks.GetMod("Pale Court");
+            SharedData.charmChanger.charmChangerMod = ModHooks.GetMod("CharmChanger");
 
             Log("Loading sprites");
             LoadSprites();

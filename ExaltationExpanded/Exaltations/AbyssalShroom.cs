@@ -57,13 +57,14 @@ namespace ExaltationExpanded.Exaltations
         private SporeDamageHelper damageHelper;
 
         /// <summary>
-        /// If we spend 1 notch to increase the cloud size, we want to hit 100% more enemies, 
-        /// so a 50% boost should be sufficent.
+        /// If we spend 1 notch to increase the cloud size, we want to hit 100% more enemies, so a 50% boost should be sufficent.
         /// </summary>
         /// <returns></returns>
         private float GetSizeModifier()
         {
-            return 1.5f;
+            // If the cost of Spore Shroom is increased, the value of 1 notch is reduced
+            float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.charmCost_17, 0.5f);
+            return 1 + 0.5f / cost;
         }
 
         /// <summary>
@@ -72,7 +73,9 @@ namespace ExaltationExpanded.Exaltations
         /// <returns></returns>
         private float GetDamageModifier()
         {
-            return 2f;
+            // If the cost of Spore Shroom is increased, the value of 1 notch is reduced
+            float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt("charmCost_17"), 0.5f);
+            return 1 + 1f / cost;
         }
     }
 }

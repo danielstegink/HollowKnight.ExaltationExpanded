@@ -21,6 +21,7 @@ namespace ExaltationExpanded.Patches
         {
             // Check if another mod, such as Carefree Grimm, is installed that added Grimmchild or Carefree Melody as an extra charm
             charmId = GetModCharmHelper.GetCharmId(new string[] { "Carefree Melody", "Grimmchild" });
+            ModHooks.GetPlayerIntHook += GetCharmCosts;
             if (charmId != -1)
             {
                 return;
@@ -39,7 +40,6 @@ namespace ExaltationExpanded.Patches
             ModHooks.LanguageGetHook += GetCharmText;
             ModHooks.GetPlayerBoolHook += GetCharmBools;
             ModHooks.SetPlayerBoolHook += SetCharmBools;
-            ModHooks.GetPlayerIntHook += GetCharmCosts;
             On.CharmIconList.GetSprite += GetIcon;
         }
 
@@ -83,7 +83,6 @@ namespace ExaltationExpanded.Patches
                     self.storeValue.Value = 4;
                 }
             }
-
         }
 
         /// <summary>
@@ -196,7 +195,8 @@ namespace ExaltationExpanded.Patches
         }
 
         /// <summary>
-        /// Gets the costs of charms
+        /// Gets the costs of charms. Unlike the other hooks, this one lets us ensure that
+        /// the charm costs are consistent between the two even if another mod adds the 2nd charm
         /// </summary>
         /// <param name="key"></param>
         /// <param name="defaultValue"></param>
@@ -205,6 +205,11 @@ namespace ExaltationExpanded.Patches
         {
             if (key.Equals($"charmCost_{charmId}"))
             {
+                if (SharedData.charmChanger.IsEnabled())
+                {
+                    return SharedData.charmChanger.GetCharmNotches(40, PlayerData.instance.GetInt("charmCost_40"));
+                }
+
                 return 2;
             }
 

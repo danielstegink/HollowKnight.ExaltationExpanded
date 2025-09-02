@@ -1,5 +1,6 @@
 ﻿using DanielSteginkUtils.Utilities;
 using ExaltationExpanded.Helpers;
+using HKMirror.Reflection.SingletonClasses;
 using HutongGames.PlayMaker;
 using Modding;
 using SFCore;
@@ -98,7 +99,7 @@ namespace ExaltationExpanded.Patches
             if (SharedData.saveSettings.nsgEquipped)
             {
                 //SharedData.Log($"Applying NSG cooldown");
-                ClassIntegrations.SetField(self, "nailChargeTime", self.NAIL_CHARGE_TIME_CHARM);
+                HeroControllerR.nailChargeTime = self.NAIL_CHARGE_TIME_CHARM;
             }
             //SharedData.Log($"NSG Final charge time: {SharedData.GetField<HeroController, float>(self, "nailChargeTime")}");
 
@@ -218,7 +219,7 @@ namespace ExaltationExpanded.Patches
         {
             if (key.Equals($"charmCost_{charmId}"))
             {
-                return 1; // todo - charm changer patch
+                return SharedData.charmChanger.GetCharmNotches(26, PlayerData.instance.GetInt("charmCost_26"));
             }
 
             return defaultValue;
@@ -226,8 +227,7 @@ namespace ExaltationExpanded.Patches
         #endregion
 
         /// <summary>
-        /// NSG is only unlocked if the settings allow it
-        /// and Sly has been beaten on radiant difficulty
+        /// NSG is only unlocked if the settings allow it and Sly has been beaten on radiant difficulty
         /// </summary>
         /// <returns></returns>
         private bool NSGUnlocked()
