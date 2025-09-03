@@ -14,9 +14,13 @@ Thank you ilcheese2 for their CarefreeGrimm mod, which made creating the Knightm
 
 Huge shout out to the Hollow Knight modding community as a whole. This was an especially intensive project and I was lost on multiple occasions without their help.
 
-Thank you to Volt and BenjaLP211 for help with testing and feedback.
+Thank you to Volt, Roma 337 and BenjaLP211 for help with testing and feedback.
 
 ## Patch Notes
+1.4.1.0
+- Adjusted save load logic so effects don't carry between saves
+- Fixed Shaman Relic logic in Power Patch
+
 1.4.0.0
 - New compatibility patch with Charm Changer
 - Primal Womb's bonuses are no longer overwritten by Charm Changer

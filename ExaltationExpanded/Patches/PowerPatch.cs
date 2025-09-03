@@ -91,9 +91,9 @@ namespace ExaltationExpanded.Patches
         }
 
         /// <summary>
-        /// For 3 notches, Shaman Stone increases the damage of spells by an average of 50% (30% for VS, but it gets a size boost).
+        /// For 3 notches, Shaman Stone increases the damage of spells by an average of 50% (33% for VS, but it gets a size boost).
         /// 
-        /// Shaman Relic increases damage by a further 12.5%, for a total of 56.25%.
+        /// Shaman Relic increases damage by a further 12.5%, for a total of 68.75%.
         /// 
         /// To be worth 2 notches, it should increase spell damage by a total of 83%.
         /// </summary>
@@ -112,11 +112,14 @@ namespace ExaltationExpanded.Patches
                 int notchCost = 3;
                 float boostPerNotch = baseModifier / notchCost;
                 float newModifier = 1 + boostPerNotch * (notchCost + 2);
+                float charmModifier = 1.5f;
                 float modModifier = 1.125f;
+                newModifier /= charmModifier;
                 newModifier /= modModifier;
 
                 int baseDamage = hitInstance.DamageDealt;
-                hitInstance.DamageDealt *= (int)(baseDamage * newModifier);
+                hitInstance.DamageDealt = Calculations.GetModdedInt(baseDamage, newModifier);
+                //ExaltationExpanded.Instance.Log($"Shaman Relic Patch - {baseDamage} * {newModifier} = {hitInstance.DamageDealt}");
             }
 
             orig(self, hitInstance);

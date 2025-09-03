@@ -16,7 +16,7 @@ namespace ExaltationExpanded
     {
         public static ExaltationExpanded Instance { get; private set; }
 
-        public override string GetVersion() => "1.4.0.0";
+        public override string GetVersion() => "1.4.1.0";
 
         public override int LoadPriority() => 2;
 
@@ -74,7 +74,7 @@ namespace ExaltationExpanded
             SharedData.knightmareLullaby.ApplyHooks();
 
             Log("Applying hooks");
-            ModHooks.SavegameLoadHook += NewGame;
+            On.HeroController.Start += NewGame;
             ModHooks.SavegameSaveHook += SaveGame;
             On.CharmIconList.GetSprite += GetSprite;
             ModHooks.LanguageGetHook += LanguageGet;
@@ -96,13 +96,10 @@ namespace ExaltationExpanded
         }
 
         #region On Save
-        /// <summary>
-        /// When a new game is loaded, the exaltations need to be reset in case the new save doesn't have them unlocked
-        /// </summary>
-        /// <param name="saveIndex"></param>
-        private void NewGame(int saveIndex)
+        private void NewGame(On.HeroController.orig_Start orig, HeroController self)
         {
-            //SharedData.Log("Loading new game");
+            orig(self);
+
             SharedData.paleCourt.CheckDefendersCrest();
 
             foreach (string key in SharedData.exaltations.Keys)
@@ -117,7 +114,7 @@ namespace ExaltationExpanded
                     IsUpgraded(key))
                 {
                     exaltation.Upgrade();
-                    //SharedData.Log($"Exaltation {exaltation.Name} loaded from save");
+                    //Log($"Exaltation {exaltation.Name} loaded from save");
                 }
             }
         }
