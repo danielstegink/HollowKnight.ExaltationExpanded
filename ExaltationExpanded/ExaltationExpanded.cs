@@ -16,7 +16,7 @@ namespace ExaltationExpanded
     {
         public static ExaltationExpanded Instance { get; private set; }
 
-        public override string GetVersion() => "1.4.1.0";
+        public override string GetVersion() => "1.5.0.0";
 
         public override int LoadPriority() => 2;
 
@@ -60,20 +60,23 @@ namespace ExaltationExpanded
             }
 
             // Check if external mods are installed
-            SharedData.paleCourt.paleCourtMod = ModHooks.GetMod("Pale Court");
             SharedData.charmChanger.charmChangerMod = ModHooks.GetMod("CharmChanger");
+            SharedData.paleCourt.paleCourtMod = ModHooks.GetMod("Pale Court");
+            SharedData.paleCourt.pcCharmsMod = ModHooks.GetMod("PaleCourtCharms");
+            SharedData.paleCourt.GetCharmIds();
 
-            Log("Loading sprites");
+            //Log("Loading sprites");
             LoadSprites();
 
-            Log("Applying patches");
+            //Log("Applying patches");
             SharedData.nailsageGlory.ApplyHooks();
             SharedData.costPatch.ApplyHooks();
             SharedData.powerPatch.ApplyHooks();
             SharedData.voidSoul.ApplyHooks();
             SharedData.knightmareLullaby.ApplyHooks();
+            SharedData.paleCourt.ApplyHooks();
 
-            Log("Applying hooks");
+            //Log("Applying hooks");
             On.HeroController.Start += NewGame;
             ModHooks.SavegameSaveHook += SaveGame;
             On.CharmIconList.GetSprite += GetSprite;
@@ -100,22 +103,29 @@ namespace ExaltationExpanded
         {
             orig(self);
 
-            SharedData.paleCourt.CheckDefendersCrest();
-
-            foreach (string key in SharedData.exaltations.Keys)
+            try
             {
-                Exaltations.Exaltation exaltation = SharedData.exaltations[key];
+                SharedData.paleCourt.SwapExaltations();
 
-                // Reset the exaltation
-                exaltation.Reset();
-
-                // Re-add it if it's been glorified on this save already
-                if (exaltation.CanUpgrade() &&
-                    IsUpgraded(key))
+                foreach (string key in SharedData.exaltations.Keys)
                 {
-                    exaltation.Upgrade();
-                    //Log($"Exaltation {exaltation.Name} loaded from save");
+                    Exaltations.Exaltation exaltation = SharedData.exaltations[key];
+
+                    // Reset the exaltation
+                    exaltation.Reset();
+
+                    // Re-add it if it's been glorified on this save already
+                    if (exaltation.CanUpgrade() &&
+                        SharedData.IsUpgraded(key))
+                    {
+                        exaltation.Upgrade();
+                        //Log($"Exaltation {exaltation.Name} loaded from save");
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log($"Error while starting game: {e.Message}\n{e.StackTrace}");
             }
         }
 
@@ -125,29 +135,36 @@ namespace ExaltationExpanded
         /// <param name="obj"></param>
         private void SaveGame(int obj)
         {
-            //SharedData.Log($"Checking if charms need to be upgraded");
-            SharedData.paleCourt.CheckDefendersCrest();
-
-            // Go through each exaltation and see if it needs to be upgraded
-            string gloryText = "";
-            foreach (string key in SharedData.exaltations.Keys)
+            try
             {
-                Exaltations.Exaltation exaltation = SharedData.exaltations[key];
-                if (exaltation.CanUpgrade() &&
-                    !IsUpgraded(key))
+                //SharedData.Log($"Checking if charms need to be upgraded");
+                SharedData.paleCourt.SwapExaltations();
+
+                // Go through each exaltation and see if it needs to be upgraded
+                string gloryText = "";
+                foreach (string key in SharedData.exaltations.Keys)
                 {
-                    SharedData.saveSettings.Exalted.Add(key);
-                    exaltation.Upgrade();
-                    gloryText = $"Charms glorified by the {exaltation.GodText}";
-                    //Log($"Exaltation {key} added to save");
+                    Exaltations.Exaltation exaltation = SharedData.exaltations[key];
+                    if (exaltation.CanUpgrade() &&
+                        !SharedData.IsUpgraded(key))
+                    {
+                        SharedData.saveSettings.Exalted.Add(key);
+                        exaltation.Upgrade();
+                        gloryText = $"Charms glorified by the {exaltation.GodText}";
+                        //Log($"Exaltation {key} added to save");
+                    }
+                }
+
+                // If we have a message to display, and Exaltation isn't going to display one,
+                // display ours
+                if (!string.IsNullOrWhiteSpace(gloryText))
+                {
+                    HeroController.instance.StartCoroutine(GloryFX(gloryText));
                 }
             }
-
-            // If we have a message to display, and Exaltation isn't going to display one,
-            // display ours
-            if (!string.IsNullOrWhiteSpace(gloryText))
+            catch (Exception e)
             {
-                HeroController.instance.StartCoroutine(GloryFX(gloryText));
+                Log($"Error while saving game: {e.Message}\n{e.StackTrace}");
             }
         }
 
@@ -202,19 +219,24 @@ namespace ExaltationExpanded
         /// <returns></returns>
         private Sprite GetSprite(On.CharmIconList.orig_GetSprite orig, CharmIconList self, int id)
         {
-            //SharedData.Log($"Getting charm sprite: {id}");
-
-            // Get the exaltation that matches the numeric ID
-            Exaltations.Exaltation exaltation = SharedData.exaltations.Values.FirstOrDefault(x => x.IntID == id);
-            if (exaltation != default)
+            try
             {
-                // Get the matching key, since glorification is linked by key instead of ID
-                string key = SharedData.exaltations.FirstOrDefault(x => x.Value == exaltation).Key;
-                if (IsUpgraded(key))
+                // Get the exaltation that matches the numeric ID
+                Exaltations.Exaltation exaltation = SharedData.exaltations.Values.FirstOrDefault(x => x.IntID == id);
+                if (exaltation != default)
                 {
-                    //SharedData.Log($"Exaltation {key} is upgraded");
-                    return SharedData.sprites[key];
+                    // Get the matching key, since glorification is linked by key instead of ID
+                    string key = SharedData.exaltations.FirstOrDefault(x => x.Value == exaltation).Key;
+                    if (SharedData.IsUpgraded(key))
+                    {
+                        //SharedData.Log($"Exaltation {key} is upgraded");
+                        return SharedData.sprites[key];
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log($"Error while getting sprite: {e.Message}\n{e.StackTrace}");
             }
 
             return orig(self, id);
@@ -229,50 +251,47 @@ namespace ExaltationExpanded
         /// <returns></returns>
         private string LanguageGet(string key, string sheetTitle, string orig)
         {
-            if (key.StartsWith("CHARM_NAME_") || 
-                key.StartsWith("CHARM_DESC_"))
+            try
             {
-                string id = key.Split(new string[] { "CHARM_NAME_", "CHARM_DESC_" }, StringSplitOptions.None)[1];
-                //SharedData.Log("Getting charm text: " + id);
-                if (id.StartsWith("40"))
+                if (key.StartsWith("CHARM_NAME_") ||
+                key.StartsWith("CHARM_DESC_"))
                 {
-                    id = "40";
-                }
-
-                Exaltations.Exaltation exaltation = SharedData.exaltations.Values.FirstOrDefault(x => x.ID.Equals(id.ToString()));
-                if (exaltation != default)
-                {
-                    //SharedData.Log("Exaltation found: " + exaltation.Name);
-
-                    // Get the matching key, since glorification is linked by key instead of ID
-                    string exaltationKey = SharedData.exaltations.FirstOrDefault(x => x.Value == exaltation).Key;
-                    //SharedData.Log("Exaltation key: " + exaltationKey);
-                    if (IsUpgraded(exaltationKey))
+                    string id = key.Split(new string[] { "CHARM_NAME_", "CHARM_DESC_" }, StringSplitOptions.None)[1];
+                    //SharedData.Log("Getting charm text: " + id);
+                    if (id.StartsWith("40"))
                     {
-                        //SharedData.Log("Exaltation is active");
-                        if (key.StartsWith("CHARM_NAME_"))
+                        id = "40";
+                    }
+
+                    Exaltations.Exaltation exaltation = SharedData.exaltations.Values.FirstOrDefault(x => x.ID.Equals(id.ToString()));
+                    if (exaltation != default)
+                    {
+                        //SharedData.Log("Exaltation found: " + exaltation.Name);
+
+                        // Get the matching key, since glorification is linked by key instead of ID
+                        string exaltationKey = SharedData.exaltations.FirstOrDefault(x => x.Value == exaltation).Key;
+                        //SharedData.Log("Exaltation key: " + exaltationKey);
+                        if (SharedData.IsUpgraded(exaltationKey))
                         {
-                            return exaltation.Name;
-                        }
-                        else
-                        {
-                            return exaltation.Description;
+                            //SharedData.Log("Exaltation is active");
+                            if (key.StartsWith("CHARM_NAME_"))
+                            {
+                                return exaltation.Name;
+                            }
+                            else
+                            {
+                                return exaltation.Description;
+                            }
                         }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                Log($"Error while getting charm text: {e.Message}\n{e.StackTrace}");
+            }
 
             return orig;
-        }
-
-        /// <summary>
-        /// Determines if the charm has already been glorified
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private bool IsUpgraded(string id)
-        {
-            return SharedData.saveSettings.Exalted.Contains(id);
         }
         #endregion
 

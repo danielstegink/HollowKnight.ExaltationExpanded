@@ -58,20 +58,27 @@ namespace ExaltationExpanded.Exaltations
         /// If we spend 1 notch to increase the cloud size, we want to hit 100% more enemies, so a 50% boost should be sufficent
         /// </summary>
         /// <returns></returns>
-        private float GetSizeModifier()
+        protected virtual float GetSizeModifier()
         {
-            float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt("charmCost_10"), 0.5f);
-            return 1 + 0.5f / cost;
+            return 1 + 0.5f / GetCharmCost();
         }
 
         /// <summary>
         /// If we spend 1 notch to boost damage on a 1 notch charm, that will be worth a 100% increase
         /// </summary>
         /// <returns></returns>
-        private float GetDamageModifier()
+        protected virtual float GetDamageModifier()
         {
-            float cost = SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt("charmCost_10"), 0.5f);
-            return 1 + 1f / cost;
+            return 1 + 1f / GetCharmCost();
+        }
+
+        /// <summary>
+        /// Gets the notch cost of the charm from Charm Changer
+        /// </summary>
+        /// <returns></returns>
+        protected float GetCharmCost()
+        {
+            return SharedData.charmChanger.GetCharmNotches(IntID, PlayerData.instance.GetInt("charmCost_10"), 0.5f);
         }
     }
 }

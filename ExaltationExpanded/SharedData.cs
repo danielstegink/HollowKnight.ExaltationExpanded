@@ -44,12 +44,26 @@ namespace ExaltationExpanded
             { "38", new Mothshield() },
             { "Grimmchild", new Knightmare() },
             { "CarefreeMelody", new LovingLullaby() },
+            { "VesselsLament", new VesselsDuty() },
+            { "MarkOfPurity", new VesselsAssault() },
+            { "BoonOfHallownest", new VesselsSpirit() },
+            { "AbyssalBloom", new VesselsDarkness() },
         };
 
         /// <summary>
         /// Cache sprites for future reference
         /// </summary>
         public static Dictionary<string, Sprite> sprites = new Dictionary<string, Sprite>();
+
+        /// <summary>
+        /// Determines if the charm has already been glorified
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool IsUpgraded(string id)
+        {
+            return saveSettings.Exalted.Contains(id);
+        }
 
         #region Patches
         public static NailsageGlory nailsageGlory { get; set; } = new NailsageGlory();

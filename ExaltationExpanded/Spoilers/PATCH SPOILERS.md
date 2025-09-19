@@ -15,7 +15,6 @@ Knightmare Lullaby lets you unlock Grimmchild and Carefree Melody as separate ch
 Void Soul lets you unlock Lordsoul as a separate charm by defeating Pure Vessel on radiant difficulty.
 
 ## Mod Integrations
-Pale Court compatibility patch currently only makes it so that unlocking King's Honour and glorifying Defender's Crest creates a 
-more powerful version called King's Majesty.
-
 Charm Changer patch modifies various charms to use the Charm Changer mod's cost and property settings when calculating their power.
+
+Pale Court compatibility patch applies Exaltation to each of the Pale Court charms. See PALE COURT SPOILERS for details.

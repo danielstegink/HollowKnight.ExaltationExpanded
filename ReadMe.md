@@ -12,11 +12,19 @@ Thank you to Xhuis, Théodore and everyone else who made Exaltation; it is an in
 
 Thank you ilcheese2 for their CarefreeGrimm mod, which made creating the Knightmare Lullaby patch so much easier.
 
+Special thanks to the hard-working community behind Pale Court for their phenomenal mod, and for giving me permission to use their charm text as 
+the basis for the Exalted versions.
+Additional thanks to Chaktis and Mebi for their incredible work bringing Pale Court to life with their art, and for giving me permission to use their 
+charm sprites as the basis for many of my Exalted sprites.
+
 Huge shout out to the Hollow Knight modding community as a whole. This was an especially intensive project and I was lost on multiple occasions without their help.
 
 Thank you to Volt, Roma 337 and BenjaLP211 for help with testing and feedback.
 
 ## Patch Notes
+1.5.0.0
+- Completed Pale Court patch
+
 1.4.1.0
 - Adjusted save load logic so effects don't carry between saves
 - Fixed Shaman Relic logic in Power Patch

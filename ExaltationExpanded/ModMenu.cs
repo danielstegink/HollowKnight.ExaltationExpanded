@@ -1,5 +1,4 @@
 ﻿using Satchel.BetterMenus;
-using Satchel.BetterMenus.Attributes;
 using System;
 using System.Collections.Generic;
 
