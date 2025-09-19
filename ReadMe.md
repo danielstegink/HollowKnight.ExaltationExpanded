@@ -22,6 +22,10 @@ Huge shout out to the Hollow Knight modding community as a whole. This was an es
 Thank you to Volt, Roma 337 and BenjaLP211 for help with testing and feedback.
 
 ## Patch Notes
+1.5.1.0
+- Bug fix for Pale Court Charms
+- Dependency fix
+
 1.5.0.0
 - Completed Pale Court patch
 

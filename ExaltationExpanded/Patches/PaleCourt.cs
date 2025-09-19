@@ -86,7 +86,7 @@ namespace ExaltationExpanded.Patches
             }
             else if (pcCharmsMod != null)
             {
-                charmIds = ClassIntegrations.GetField<IMod, List<int>>(paleCourtMod, "CharmIDs");
+                charmIds = ClassIntegrations.GetField<IMod, List<int>>(pcCharmsMod, "CharmIDs");
             }
         }
 

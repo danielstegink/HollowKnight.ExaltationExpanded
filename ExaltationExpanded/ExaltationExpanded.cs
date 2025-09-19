@@ -16,7 +16,7 @@ namespace ExaltationExpanded
     {
         public static ExaltationExpanded Instance { get; private set; }
 
-        public override string GetVersion() => "1.5.0.0";
+        public override string GetVersion() => "1.5.1.0";
 
         public override int LoadPriority() => 2;
 

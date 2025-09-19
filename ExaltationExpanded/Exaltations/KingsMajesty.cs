@@ -21,9 +21,10 @@ namespace ExaltationExpanded.Exaltations
                 object saveSettings = ClassIntegrations.GetProperty<IMod, object>(SharedData.paleCourt.paleCourtMod, "SaveSettings");
                 return ClassIntegrations.GetField<object, bool>(saveSettings, "upgradedCharm_10");
             }
-            else if (SharedData.paleCourt.pcCharmsMod != null) // King's Majesty is eligible for PC Charms
+            else if (SharedData.globalSettings.allowPaleCourt &&
+                        SharedData.paleCourt.pcCharmsMod != null) // King's Majesty is eligible for PC Charms
             {
-                object saveSettings = ClassIntegrations.GetProperty<IMod, object>(SharedData.paleCourt.pcCharmsMod, "localSettings");
+                object saveSettings = ClassIntegrations.GetField<IMod, object>(SharedData.paleCourt.pcCharmsMod, "localSettings");
                 return ClassIntegrations.GetField<object, bool>(saveSettings, "upgradedCharm_10");
             }
 
