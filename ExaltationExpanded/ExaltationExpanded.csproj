@@ -345,6 +345,9 @@
     <None Include="..\ReadMe.md" Link="ReadMe.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="..\Spoilers\PALE COURT SPOILERS.md" Link="PALE COURT SPOILERS.md" />
+    <None Include="..\Spoilers\PATCH SPOILERS.md" Link="PATCH SPOILERS.md" />
+    <None Include="..\Spoilers\SPOILERS.md" Link="SPOILERS.md" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\*" />
