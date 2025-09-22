@@ -49,6 +49,9 @@ namespace ExaltationExpanded.Patches
             // Apply charm effects
             ModHooks.HitInstanceHook += ApplyNSG;
             On.HeroController.CharmUpdate += AdjustCharmTime;
+            ModHooks.BeforeSavegameSaveHook += BeforeSave;
+
+            // Get/Set charm data
             On.CharmIconList.GetSprite += GetSprite;
             ModHooks.LanguageGetHook += GetCharmText;
             ModHooks.GetPlayerBoolHook += GetCharmBools;
@@ -86,11 +89,11 @@ namespace ExaltationExpanded.Patches
             return hit;
         }
 
-    /// <summary>
-    /// Apply NMG's cooldown reduction so long as one of them is equipped, but don't stack it
-    /// </summary>
-    /// <param name="orig"></param>
-    /// <param name="self"></param>
+        /// <summary>
+        /// Apply NMG's cooldown reduction so long as one of them is equipped, but don't stack it
+        /// </summary>
+        /// <param name="orig"></param>
+        /// <param name="self"></param>
         private void AdjustCharmTime(On.HeroController.orig_CharmUpdate orig, HeroController self)
         {
             orig(self);
@@ -102,8 +105,23 @@ namespace ExaltationExpanded.Patches
                 HeroControllerR.nailChargeTime = self.NAIL_CHARGE_TIME_CHARM;
             }
             //SharedData.Log($"NSG Final charge time: {SharedData.GetField<HeroController, float>(self, "nailChargeTime")}");
-
         }
+
+        /// <summary>
+        /// If we're locking Nailsage's Glory in place, we need to stop Exaltation from swapping
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void BeforeSave(SaveGameData data)
+        {
+            // Only run this check if NSG is unlocked 
+            if (NSGUnlocked())
+            {
+                ClassIntegrations.SetField(SharedData.exaltationMod, "SwitchGlory", false);
+                SharedData.exaltationMod.Settings.Patience = false;
+            }
+        }
+        #endregion
 
         #region Charm Data and Settings
         /// <summary>
@@ -245,6 +263,5 @@ namespace ExaltationExpanded.Patches
 
             return true;
         }
-        #endregion
     }
 }

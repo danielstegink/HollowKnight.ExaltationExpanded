@@ -17,5 +17,7 @@
         public bool allowCharmChanger = true;
 
         public int charmChangerKingsoulCost = 5;
+
+        public bool grimmGoodEnding = true;
     }
 }

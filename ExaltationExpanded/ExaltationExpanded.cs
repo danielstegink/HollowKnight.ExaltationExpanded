@@ -16,7 +16,7 @@ namespace ExaltationExpanded
     {
         public static ExaltationExpanded Instance { get; private set; }
 
-        public override string GetVersion() => "1.5.1.0";
+        public override string GetVersion() => "1.5.2.0";
 
         public override int LoadPriority() => 2;
 
@@ -72,8 +72,8 @@ namespace ExaltationExpanded
             SharedData.nailsageGlory.ApplyHooks();
             SharedData.costPatch.ApplyHooks();
             SharedData.powerPatch.ApplyHooks();
-            SharedData.voidSoul.ApplyHooks();
             SharedData.knightmareLullaby.ApplyHooks();
+            SharedData.voidSoul.ApplyHooks();
             SharedData.paleCourt.ApplyHooks();
 
             //Log("Applying hooks");

@@ -93,6 +93,11 @@ namespace ExaltationExpanded
                                         BoolValues(),
                                         value => SharedData.globalSettings.allowKnightmareLullaby = Convert.ToBoolean(value),
                                         () => Convert.ToInt32(SharedData.globalSettings.allowKnightmareLullaby)),
+                new HorizontalOption("Default Grimm",
+                                        "Which is canon?",
+                                        GrimmValues(),
+                                        value => SharedData.globalSettings.grimmGoodEnding = Convert.ToBoolean(value),
+                                        () => Convert.ToInt32(SharedData.globalSettings.grimmGoodEnding)),
             });
             subMenus.Add(subMenuNames[1], swapMenu.GetMenuScreen(menuScreen));
 
@@ -125,6 +130,11 @@ namespace ExaltationExpanded
         private static string[] BoolValues()
         {
             return new string[] { "OFF", "ON" };
+        }
+
+        private static string[] GrimmValues()
+        {
+            return new string[] { "Grimmchild", "Carefree Melody" };
         }
 
         /// <summary>

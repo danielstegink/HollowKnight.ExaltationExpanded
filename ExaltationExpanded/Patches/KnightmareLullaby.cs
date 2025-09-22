@@ -1,4 +1,5 @@
 ﻿using DanielSteginkUtils.Helpers.Charms;
+using DanielSteginkUtils.Utilities;
 using ExaltationExpanded.Helpers;
 using Modding;
 using SFCore;
@@ -22,6 +23,7 @@ namespace ExaltationExpanded.Patches
             // Check if another mod, such as Carefree Grimm, is installed that added Grimmchild or Carefree Melody as an extra charm
             charmId = GetModCharmHelper.GetCharmId(new string[] { "Carefree Melody", "Grimmchild" });
             ModHooks.GetPlayerIntHook += GetCharmCosts;
+            ModHooks.BeforeSavegameSaveHook += BeforeSave;
             if (charmId != -1)
             {
                 return;
@@ -43,6 +45,32 @@ namespace ExaltationExpanded.Patches
             On.CharmIconList.GetSprite += GetIcon;
         }
 
+        /// <summary>
+        /// If we're locking Grimmchild in place, we need to stop Exaltation from swapping
+        /// </summary>
+        /// <param name="data"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void BeforeSave(SaveGameData data)
+        {
+            // Only run this check if KL is unlocked
+            if (IsUnlocked())
+            {
+                ClassIntegrations.SetField(SharedData.exaltationMod, "SwitchNightmare", false);
+
+                if (SharedData.globalSettings.grimmGoodEnding)
+                {
+                    PlayerData.instance.SetInt("grimmChildLevel", 5);
+                    PlayerData.instance.SetBool("destroyedNightmareLantern", true);
+                }
+                else
+                {
+                    PlayerData.instance.SetInt("grimmChildLevel", 4);
+                    PlayerData.instance.SetBool("destroyedNightmareLantern", false);
+                }
+            }
+        }
+
+        #region Charm Effects
         /// <summary>
         /// In the Spawn Grimmchild FSM, we need to bypass the Check state if Grimmchild is the 2nd charm
         /// </summary>
@@ -116,6 +144,7 @@ namespace ExaltationExpanded.Patches
                 self.carefreeShieldEquipped = SharedData.saveSettings.knightmareLullabyEquipped;
             }
         }
+        #endregion
 
         #region Charm Data and Settings
         /// <summary>

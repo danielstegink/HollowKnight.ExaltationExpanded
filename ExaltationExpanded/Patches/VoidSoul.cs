@@ -34,10 +34,8 @@ namespace ExaltationExpanded.Patches
         }
 
         /// <summary>
-        /// One of the features of this mod is that Exaltation cannot create Lordsoul anymore,
-        ///     which means we have to stop it from switching to Lordsoul.
-        /// The switch happens in Glorification, which happens in SaveGameSave, so we need to
-        ///     set some values to prevent it from swapping the charms.
+        /// One of the features of this mod is that Exaltation cannot create Lordsoul anymore, which means we have to stop it from switching to Lordsoul.
+        /// The switch happens in Glorification, which happens in SaveGameSave, so we need to set some values to prevent it from swapping the charms.
         /// </summary>
         /// <param name="data"></param>
         /// <exception cref="NotImplementedException"></exception>
