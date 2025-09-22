@@ -11,6 +11,7 @@ Cost Patch fixes cost code for Lifeseed Lantern, Garden Sprig, Ambrosial Ampoule
 Nailsage's Glory allows you to unlock both Nailsage's Tenacity and Nailsage's Patience as separate charms by defeating Nailsage Sly on radiant difficulty.
 
 Knightmare Lullaby lets you unlock Grimmchild and Carefree Melody as separate charms by defeating Nightmare King Grimm on radiant difficulty.
+Althought all 3 of these charm features "lock" to prevent charm swapping, you can configure whether Grimmchild or CM is the default via the Mod Menu.
 
 Void Soul lets you unlock Lordsoul as a separate charm by defeating Pure Vessel on radiant difficulty.
 
