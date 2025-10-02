@@ -128,7 +128,7 @@ namespace ExaltationExpanded.Patches
         /// <summary>
         /// At 2 notches, Glowing Womb produces a hatchling every 4 seconds at 8 SOUL each, for a maximum of 4 hatchlings.
         /// Primal Womb produces them every 2 seconds at 4 SOUL each, maximum 8.
-        /// Any one of these categories would be worth the 2 notches. I've elected to keep the time boost.
+        /// The time and SOUL boosts make sense to me, but I don't think keeping the maximum makes sense.
         /// 
         /// However, Charm Changer overwrites Primal Womb's changes, so I need to preserve original functionality.
         /// Normally I would modify the IntCompares in the FSM, but for some reason Charm Changer takes precedence.

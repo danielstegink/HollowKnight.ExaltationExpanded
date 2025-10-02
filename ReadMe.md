@@ -19,9 +19,12 @@ charm sprites as the basis for many of my Exalted sprites.
 
 Huge shout out to the Hollow Knight modding community as a whole. This was an especially intensive project and I was lost on multiple occasions without their help.
 
-Thank you to Volt, Roma 337 and BenjaLP211 for help with testing and feedback.
+Thank you to Volt, Roma 337, hannes-j and BenjaLP211 for testing and feedback.
 
 ## Patch Notes
+1.5.3.0
+- Rebalanced Primal Womb in Power patch
+
 1.5.2.0
 - Removed ItemChanger dependency
 - Added charm locking to swappable charms
