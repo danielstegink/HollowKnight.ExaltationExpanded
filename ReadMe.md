@@ -25,7 +25,7 @@ Thank you to Volt, Roma 337, hannes-j and BenjaLP211 for testing and feedback.
 1.5.4.0
 - Modified FSM hooks to avoid triggering the "loop count exceeded maximum" issue
 
-- 1.5.3.0
+1.5.3.0
 - Rebalanced Primal Womb in Power patch
 
 1.5.2.0
