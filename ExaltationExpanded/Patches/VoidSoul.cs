@@ -186,6 +186,7 @@ namespace ExaltationExpanded.Patches
             while (SharedData.saveSettings.voidSoulEquipped)
             {
                 HeroController.instance.AddMPCharge(soulGain);
+                //ExaltationExpanded.Instance.Log($"Lordsoul - {soulGain} SOUL added. Waiting {waitTime} seconds");
                 yield return new WaitForSeconds(waitTime);
             }
         }

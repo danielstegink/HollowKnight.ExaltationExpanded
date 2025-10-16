@@ -161,23 +161,22 @@ namespace ExaltationExpanded.Patches
         /// <exception cref="NotImplementedException"></exception>
         private void PrimalWombTimePatch(On.HutongGames.PlayMaker.Actions.Wait.orig_OnEnter orig, HutongGames.PlayMaker.Actions.Wait self)
         {
-            float defaultValue = self.time.Value;
 
             if (self.Fsm.Name.Equals("Hatchling Spawn") &&
                 self.State.Name.Equals("Equipped") &&
                 SharedData.exaltationMod.Settings.GlowingWombGlorified &&
                 PlayerData.instance.GetBool("equippedCharm_22"))
             {
+                float defaultValue = self.time.Value;
                 self.time.Value = 2f;
                 //ExaltationExpanded.Instance.Log($"Primal Womb Patch - Time: {defaultValue} -> {self.time}");
-            }
 
-            orig(self);
-
-            if (self.time.Value != defaultValue)
-            {
-                //ExaltationExpanded.Instance.Log($"Primal Womb Patch - Final time: {self.time.Value}");
+                orig(self);
                 self.time.Value = defaultValue;
+            }
+            else
+            {
+                orig(self);
             }
         }
 

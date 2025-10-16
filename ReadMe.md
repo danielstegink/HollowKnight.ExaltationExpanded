@@ -22,7 +22,10 @@ Huge shout out to the Hollow Knight modding community as a whole. This was an es
 Thank you to Volt, Roma 337, hannes-j and BenjaLP211 for testing and feedback.
 
 ## Patch Notes
-1.5.3.0
+1.5.4.0
+- Modified FSM hooks to avoid triggering the "loop count exceeded maximum" issue
+
+- 1.5.3.0
 - Rebalanced Primal Womb in Power patch
 
 1.5.2.0
