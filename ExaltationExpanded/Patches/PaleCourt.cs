@@ -108,6 +108,7 @@ namespace ExaltationExpanded.Patches
             // By default, Defender's Crest should evolve into Royal Crest
             SharedData.exaltations["10"].Reset();
             SharedData.exaltations["10"] = new RoyalCrest();
+            SharedData.exaltations["10"].Upgrade();
             Sprite sprite = SpriteHelper.GetLocalSprite("10");
             SharedData.sprites["10"] = sprite;
 
@@ -117,7 +118,7 @@ namespace ExaltationExpanded.Patches
             {
                 SharedData.exaltations["10"].Reset();
                 SharedData.exaltations["10"] = lv4;
-
+                SharedData.exaltations["10"].Upgrade();
                 sprite = SpriteHelper.GetLocalSprite("10_4");
                 SharedData.sprites["10"] = sprite;
                 return;
@@ -129,7 +130,7 @@ namespace ExaltationExpanded.Patches
             {
                 SharedData.exaltations["10"].Reset();
                 SharedData.exaltations["10"] = lv3;
-
+                SharedData.exaltations["10"].Upgrade();
                 sprite = SpriteHelper.GetLocalSprite("10_3");
                 SharedData.sprites["10"] = sprite;
                 return;
@@ -141,7 +142,7 @@ namespace ExaltationExpanded.Patches
             {
                 SharedData.exaltations["10"].Reset();
                 SharedData.exaltations["10"] = lv2;
-
+                SharedData.exaltations["10"].Upgrade();
                 sprite = SpriteHelper.GetLocalSprite("10_2");
                 SharedData.sprites["10"] = sprite;
             }
@@ -164,6 +165,7 @@ namespace ExaltationExpanded.Patches
             {
                 SharedData.exaltations["VesselsLament"].Reset();
                 SharedData.exaltations["VesselsLament"] = resolve;
+                SharedData.exaltations["VesselsLament"].Upgrade();
 
                 sprite = SpriteHelper.GetLocalSprite("VesselsLament_2");
                 SharedData.sprites["VesselsLament"] = sprite;
